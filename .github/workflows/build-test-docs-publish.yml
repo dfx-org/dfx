@@ -8,7 +8,7 @@ permissions:
 on:
   push:
     branches:
-      - dev
+      - main
     tags:        
       - v*             # Push events to v1.2.3 tag
   workflow_dispatch:

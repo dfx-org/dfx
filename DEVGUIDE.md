@@ -2,7 +2,7 @@
 
 You can clone this repository to your machine as follows:
 ```
-git clone --branch dev https://github.com/dfx-org/dfx.git
+git clone https://github.com/dfx-org/dfx.git
 cd dfx
 ```
 

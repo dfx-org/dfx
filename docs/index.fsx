@@ -187,7 +187,7 @@ print $"Validation loss: {validLoss/validSet.length}"
 
 (**
 
-Numerous other model definition, differentiation, and training patterns are supported. See the tutorials in the left-hand menu and [examples](https://github.com/dfx-org/dfx/tree/dev/examples) on GitHub.
+Numerous other model definition, differentiation, and training patterns are supported. See the tutorials in the left-hand menu and [examples](https://github.com/dfx-org/dfx/tree/main/examples) on GitHub.
 
 ## More Information
 

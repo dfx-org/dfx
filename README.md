@@ -1,6 +1,6 @@
 # Dfx
 
-[![Build Status](https://github.com/dfx-org/dfx/actions/workflows/build-test-docs-publish.yml/badge.svg?branch=dev)](https://github.com/dfx-org/dfx/actions)
+[![Build Status](https://github.com/dfx-org/dfx/actions/workflows/build-test-docs-publish.yml/badge.svg?branch=main)](https://github.com/dfx-org/dfx/actions)
 
 This is the development branch of Dfx 1.0.
 
@@ -26,7 +26,7 @@ Dfx is a tensor library with support for [differentiable programming](https://en
 
 You can find the documentation in the [docs](docs) directory, including information on installation and getting started.
 
-Release notes can be found [here](https://github.com/dfx-org/dfx/blob/dev/RELEASE_NOTES.md).
+Release notes can be found [here](https://github.com/dfx-org/dfx/blob/main/RELEASE_NOTES.md).
 
 ## Communication
 
@@ -45,4 +45,4 @@ Dfx carries forward DiffSharp, which was developed by [Atılım Güneş Baydin](
 
 ## License
 
-Dfx is licensed under the BSD 2-Clause "Simplified" License, which you can find in the [LICENSE](https://github.com/dfx-org/dfx/blob/dev/LICENSE) file in this repository.
+Dfx is licensed under the BSD 2-Clause "Simplified" License, which you can find in the [LICENSE](https://github.com/dfx-org/dfx/blob/main/LICENSE) file in this repository.
