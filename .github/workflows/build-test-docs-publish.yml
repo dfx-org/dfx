@@ -40,7 +40,7 @@ jobs:
     - name: Build (Debug)
       run: dotnet build --configuration Debug --no-restore --verbosity normal
     - name: Test
-      run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --configuration Release --no-build --verbosity normal
+      run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --configuration Release --no-build --verbosity normal --logger "console;verbosity=detailed"
     - name: Get git commit info
       run: |
         printf '%s\n' \

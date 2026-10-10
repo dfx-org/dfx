@@ -57,7 +57,7 @@ module helpers =
             sb.ToString()
         | _ -> v.ToString()
 
-    let runScript executable lines timeoutMilliseconds =
+    let runScript executable lines (timeoutMilliseconds:int) =
         let fileName = Path.GetTempFileName()
         File.WriteAllLines(fileName, lines)
         let success =

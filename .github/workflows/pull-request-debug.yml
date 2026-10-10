@@ -23,6 +23,6 @@ jobs:
     - name: Build
       run: dotnet build --configuration Debug --no-restore --verbosity normal
     - name: Test
-      run: dotnet test --configuration Debug --no-restore --verbosity normal
+      run: dotnet test --configuration Debug --no-restore --verbosity normal --logger "console;verbosity=detailed"
     - name: Run fsdocs
       run: dotnet fsdocs build --eval --strict

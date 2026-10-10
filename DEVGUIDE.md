@@ -13,7 +13,7 @@ Required:
 
 Use the following command in the root directory of this repository:
 ```
-dotnet test
+dotnet test --logger "console;verbosity=detailed"
 ```
 
 ## Build Dfx in Docker
@@ -28,7 +28,7 @@ docker build -t dfx .
 
 Use the following to instantiate a Docker container from the `dfx` image and run the tests inside:
 ```
-docker run --rm dfx dotnet test
+docker run --rm dfx dotnet test --logger "console;verbosity=detailed"
 ```
 
 ## Building against locally built TorchSharp packages
@@ -78,7 +78,7 @@ By default in-branch testing is only done on CPU.  To enable on GPU/CUDA you mus
 
 1. Make sure you have a device eligible for CUDA 11.1 and all device drivers installed (e.g. install the appropriate NVIDIA CUDA SDK)
 
-2. Use `dotnet test /p:DFX_TESTGPU=true`
+2. Use `dotnet test /p:DFX_TESTGPU=true --logger "console;verbosity=detailed"`
 
 3. Verify that `dfx.isCudaEnabled(Device.GPU)` is returning true and GPU testing is enabled in `TestUtil.fs`.
 

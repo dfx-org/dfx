@@ -11,7 +11,6 @@ open Dfx.Util
 open System
 open System.IO
 open System.IO.Compression
-open System.Text
 open System.Net
 
 
@@ -24,58 +23,40 @@ module DataUtil =
         if File.Exists(localFileName) then
             printfn "File exists, skipping download: %A" localFileName
         else
-            let wc = new WebClient()
             printfn "Downloading %A to %A" url localFileName
-            wc.DownloadFile(url, localFileName)
-            wc.Dispose()
+            let tempFileName = localFileName + ".download"
+            let downloadTo (fileName:string) =
+                use client = new Http.HttpClient(Timeout=Threading.Timeout.InfiniteTimeSpan)
+                use response = client.GetAsync(url, Http.HttpCompletionOption.ResponseHeadersRead).GetAwaiter().GetResult()
+                response.EnsureSuccessStatusCode() |> ignore
+                use source = response.Content.ReadAsStream()
+                use target = File.Create(fileName)
+                source.CopyTo(target)
+            downloadTo tempFileName
+            File.Move(tempFileName, localFileName, true)
 
+    /// Extracts the tar archive in the given stream to the given directory.
     let extractTarStream (stream:Stream) (outputDir:string) =
-        // Tar standard: https://www.gnu.org/software/tar/manual/html_node/Standard.html
-        let buffer:byte[] = Array.zeroCreate 100
-        let mutable stop = false
-        while not stop do
-            stream.Read(buffer, 0, 100) |> ignore // Read 'char name[100]'
-            let name = Encoding.ASCII.GetString(buffer).Trim(Convert.ToChar(0)).Trim()
-            if String.IsNullOrWhiteSpace(name) then stop <- true
-            else
-                stream.Seek(24L, SeekOrigin.Current) |> ignore // Seek to 'char size[12]'
-                stream.Read(buffer, 0, 12) |> ignore // Read 'char size[12]'
-                let size = Convert.ToInt32(Encoding.ASCII.GetString(buffer, 0, 12).Trim(Convert.ToChar(0)).Trim(), 8)
-                printfn "Extracting %A (%A Bytes)" name size
-                stream.Seek(376L, SeekOrigin.Current) |> ignore // Seek to end of header block, beginning of file data
-                let output = Path.Combine(outputDir, name)
-                if not (Directory.Exists(Path.GetDirectoryName(output))) then
-                    Directory.CreateDirectory(Path.GetDirectoryName(output)) |> ignore
-                if size > 0 then
-                    let str = File.Open(output, FileMode.OpenOrCreate, FileAccess.Write)
-                    let buf:byte[] = Array.zeroCreate size
-                    stream.Read(buf, 0, buf.Length) |> ignore // Read file data
-                    str.Write(buf, 0, buf.Length)
-                    str.Close()
-                let pos = stream.Position
-                let mutable offset = 512L - (pos % 512L)
-                if offset = 512L then
-                    offset <- 0L
-                stream.Seek(offset, SeekOrigin.Current) |> ignore // Seek to next 512-byte block
+        Directory.CreateDirectory(outputDir) |> ignore
+        Formats.Tar.TarFile.ExtractToDirectory(stream, outputDir, true)
 
+    /// Extracts the given .tar.gz file to the given directory.
     let extractTarGz (fileName:string) (outputDir:string) =
-        let fs = File.OpenRead(fileName)
-        let gz = new GZipStream(fs, CompressionMode.Decompress)
-        let chunk = 4096
-        let memstr = new MemoryStream()
-        let buffer:byte[] = Array.zeroCreate chunk
-        // The code below for GZipStream read was affected by a breaking change between dotnet 5.0 and 6.0
-        // https://docs.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/6.0/partial-byte-reads-in-streams
-        // It was subsequently fixed to work correctly on both dotnet 5.0 and 6.0
-        let mutable read = 1
-        while read > 0 do
-            read <- gz.Read(buffer, 0, chunk)
-            memstr.Write(buffer, 0, read)
-        gz.Close()
-        fs.Close()
-        memstr.Seek(0L, SeekOrigin.Begin) |> ignore
-        extractTarStream memstr outputDir
-        memstr.Close()
+        let stagingDir = outputDir + ".extracting"
+        if Directory.Exists(stagingDir) then Directory.Delete(stagingDir, true)
+        do
+            use fs = File.OpenRead(fileName)
+            use gz = new GZipStream(fs, CompressionMode.Decompress)
+            extractTarStream gz stagingDir
+        Directory.CreateDirectory(outputDir) |> ignore
+        for entry in Directory.GetFileSystemEntries(stagingDir) do
+            let target = Path.Combine(outputDir, Path.GetFileName(entry))
+            if Directory.Exists(entry) then
+                if Directory.Exists(target) then Directory.Delete(target, true)
+                Directory.Move(entry, target)
+            else
+                File.Move(entry, target, true)
+        Directory.Delete(stagingDir, true)
 
 
 type ImageDataset(path:string, ?fileExtension:string, ?resize:int*int, ?transform:Tensor->Tensor, ?targetTransform:Tensor->Tensor) =

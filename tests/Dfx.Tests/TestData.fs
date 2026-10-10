@@ -55,6 +55,7 @@ type TestData () =
         Assert.AreEqual(classNamesCorrect, classNames)
 
     [<Test>]
+    [<Explicit("Downloads, extracts, and materializes the full CIFAR-10 dataset.")>]
     member _.TestCIFAR10Dataset () =
         // Note: this test can fail if https://www.cs.toronto.edu/~kriz website goes down or file urls change
         let cd = Directory.GetCurrentDirectory()
@@ -90,6 +91,7 @@ type TestData () =
         Assert.AreEqual(classNamesCorrect, classNames)        
 
     [<Test>]
+    [<Explicit("Downloads, extracts, and materializes the full CIFAR-100 dataset.")>]
     member _.TestCIFAR100Dataset () =
         // Note: this test can fail if https://www.cs.toronto.edu/~kriz website goes down or file urls change
         let cd = Directory.GetCurrentDirectory()
