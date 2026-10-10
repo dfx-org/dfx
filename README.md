@@ -11,6 +11,10 @@ This is the development branch of DiffSharp 1.0.
 
 > **NOTE: This branch is undergoing development. It has incomplete code, functionality, and design that are likely to change without notice; when using TorchSharp backend, only x64 platform is currently supported out of the box, see [DEVGUIDE.md] for more details.**
 
+## From DiffSharp to Dfx
+
+Dfx is the next chapter of the work begun in DiffSharp. We are deeply grateful to DiffSharp's creators, maintainers, contributors, and community, whose ideas, care, and many years of work made this project possible. Dfx is intended to carry that work forward with respect for its history and with sincere appreciation for everyone who helped build its foundation.
+
 DiffSharp is a tensor library with support for [differentiable programming](https://en.wikipedia.org/wiki/Differentiable_programming). It is designed for use in machine learning, probabilistic programming, optimization and other domains.
 
 **Key features**
