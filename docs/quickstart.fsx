@@ -12,7 +12,7 @@ open Dfx.Util
 
 (*** condition: fsx ***)
 #if FSX
-#r "nuget: Dfx-lite,{{fsdocs-package-version}}"
+#r "nuget: dfx-lite,{{fsdocs-package-version}}"
 #r "nuget: SixLabors.ImageSharp,1.0.1"
 #endif // FSX
 (*** condition: ipynb ***)
@@ -22,7 +22,7 @@ open Dfx.Util
 (*** condition: ipynb ***)
 #if IPYNB
 // Import Dfx package
-#r "nuget: Dfx-lite,{{fsdocs-package-version}}"
+#r "nuget: dfx-lite,{{fsdocs-package-version}}"
 #r "nuget: SixLabors.ImageSharp,1.0.1"
 
 // Set dotnet interactive formatter to plaintext

@@ -10,7 +10,7 @@ Dfx.dfx.seed(123)
 
 (*** condition: fsx ***)
 #if FSX
-#r "nuget: Dfx-lite,{{fsdocs-package-version}}"
+#r "nuget: dfx-lite,{{fsdocs-package-version}}"
 #endif // FSX
 (*** condition: ipynb ***)
 #if IPYNB
@@ -19,7 +19,7 @@ Dfx.dfx.seed(123)
 (*** condition: ipynb ***)
 #if IPYNB
 // Import Dfx package
-#r "nuget: Dfx-lite,{{fsdocs-package-version}}"
+#r "nuget: dfx-lite,{{fsdocs-package-version}}"
 
 // Set dotnet interactive formatter to plaintext
 Formatter.SetPreferredMimeTypesFor(typeof<obj>, "text/plain")

@@ -10,7 +10,7 @@ Dfx.dfx.seed(123)
 
 (*** condition: fsx ***)
 #if FSX
-#r "nuget: Dfx-lite,{{fsdocs-package-version}}"
+#r "nuget: dfx-lite,{{fsdocs-package-version}}"
 #endif // FSX
 (*** condition: ipynb ***)
 #if IPYNB
@@ -19,7 +19,7 @@ Dfx.dfx.seed(123)
 (*** condition: ipynb ***)
 #if IPYNB
 // Import Dfx package
-#r "nuget: Dfx-lite,{{fsdocs-package-version}}"
+#r "nuget: dfx-lite,{{fsdocs-package-version}}"
 
 // Set dotnet interactive formatter to plaintext
 Formatter.SetPreferredMimeTypesFor(typeof<obj>, "text/plain")
@@ -36,6 +36,12 @@ Formatter.Register(fun (x:obj) (writer: TextWriter) -> fprintfn writer "%120A" x
 
 Dfx is a tensor library with support for [differentiable programming](https://en.wikipedia.org/wiki/Differentiable_programming).
 It is designed for use in machine learning, probabilistic programming, optimization and other domains.
+
+## Continuing DiffSharp
+
+Dfx is the continuation of [DiffSharp](https://github.com/DiffSharp/DiffSharp), carrying its work forward with deep respect for the ideas, care, and contributions that established its foundation.
+
+We offer our sincere thanks to [Dr. Atılım Güneş Baydin](https://www.cs.ox.ac.uk/people/atilim.gunes.baydin/) for creating and leading DiffSharp and for his foundational contributions to differentiable programming in F#.
 
 <button class="button" style="vertical-align:middle" onclick="window.location.href='{{root}}install.html'"><span>Install »</span></button>
 
@@ -190,7 +196,7 @@ Numerous other model definition, differentiation, and training patterns are supp
 
 ## More Information
 
-Dfx carries forward DiffSharp, which was developed by [Atılım Güneş Baydin](http://www.robots.ox.ac.uk/~gunes/), [Don Syme](https://www.microsoft.com/en-us/research/people/dsyme/)
+Dfx carries forward [DiffSharp](https://github.com/DiffSharp/DiffSharp), which was developed by [Dr. Atılım Güneş Baydin](https://www.cs.ox.ac.uk/people/atilim.gunes.baydin/), [Don Syme](https://www.microsoft.com/en-us/research/people/dsyme/)
 and other contributors, having started as a project supervised by the automatic differentiation wizards [Barak Pearlmutter](https://scholar.google.com/citations?user=AxFrw0sAAAAJ&hl=en) and [Jeffrey Siskind](https://scholar.google.com/citations?user=CgSBtPYAAAAJ&hl=en).
 
 Please join us [on GitHub](https://github.com/dfx-org/dfx)!

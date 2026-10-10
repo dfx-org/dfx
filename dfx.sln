@@ -19,9 +19,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Dfx.Backends.TestDuplicate"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bundles", "bundles", "{408BBEB8-B412-4387-8658-CD9A5FD361D6}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Dfx-cpu", "bundles\Dfx-cpu\Dfx-cpu.fsproj", "{736CDA1E-5821-4022-95EE-47932F03D712}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Dfx-cpu", "bundles\dfx-cpu\Dfx-cpu.fsproj", "{736CDA1E-5821-4022-95EE-47932F03D712}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Dfx-lite", "bundles\Dfx-lite\Dfx-lite.fsproj", "{97D6F7AE-3ACA-4B3A-B4AF-BB22A85A05A3}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Dfx-lite", "bundles\dfx-lite\Dfx-lite.fsproj", "{97D6F7AE-3ACA-4B3A-B4AF-BB22A85A05A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{841AB16F-508E-4CEB-846C-0CCA056842B1}"
 	ProjectSection(SolutionItems) = preProject

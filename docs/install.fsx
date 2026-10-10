@@ -10,7 +10,7 @@ Dfx.dfx.seed(123)
 
 (*** condition: fsx ***)
 #if FSX
-#r "nuget: Dfx-lite,{{fsdocs-package-version}}"
+#r "nuget: dfx-lite,{{fsdocs-package-version}}"
 #endif // FSX
 (*** condition: ipynb ***)
 #if IPYNB
@@ -19,7 +19,7 @@ Dfx.dfx.seed(123)
 (*** condition: ipynb ***)
 #if IPYNB
 // Import Dfx package
-#r "nuget: Dfx-lite,{{fsdocs-package-version}}"
+#r "nuget: dfx-lite,{{fsdocs-package-version}}"
 
 // Set dotnet interactive formatter to plaintext
 Formatter.SetPreferredMimeTypesFor(typeof<obj>, "text/plain")
@@ -47,9 +47,9 @@ You can use Dfx in [dotnet interactive](https://github.com/dotnet/interactive) n
 
 ```text
 // Use one of the following three lines
-&#35;r "nuget: Dfx-cpu" // Use the latest version
-&#35;r "nuget: Dfx-cpu, *-*" // Use the latest pre-release version
-&#35;r "nuget: Dfx-cpu, 1.0.7" // Use a specific version
+&#35;r "nuget: dfx-cpu" // Use the latest version
+&#35;r "nuget: dfx-cpu, *-*" // Use the latest pre-release version
+&#35;r "nuget: dfx-cpu, 1.0.8" // Use a specific version
 
 open Dfx
 ```
@@ -61,27 +61,27 @@ open Dfx
 
 You can add Dfx to your dotnet application using the [dotnet](https://dotnet.microsoft.com/) command-line interface (CLI).
 
-For example, the following creates a new F# console application and adds the latest pre-release version of the `Dfx-cpu` package as a dependency.
+For example, the following creates a new F# console application and adds the latest pre-release version of the `dfx-cpu` package as a dependency.
 
     dotnet new console -lang "F#" -o src/app
     cd src/app
-    dotnet add package --prerelease Dfx-cpu
+    dotnet add package --prerelease dfx-cpu
     dotnet run
 
 ## Packages
 
 We provide several package bundles for a variety of use cases.
 
-* [Dfx-cpu](https://www.nuget.org/packages/Dfx-cpu)</br>
+* [dfx-cpu](https://www.nuget.org/packages/dfx-cpu)</br>
   Includes LibTorch CPU binaries for Linux, macOS, and Windows.
-* [Dfx-cuda-linux](https://www.nuget.org/packages/Dfx-cuda-linux) / [Dfx-cuda-windows](https://www.nuget.org/packages/Dfx-cuda-windows)</br>
+* [dfx-cuda-linux](https://www.nuget.org/packages/dfx-cuda-linux) / [dfx-cuda-windows](https://www.nuget.org/packages/dfx-cuda-windows)</br>
   Include LibTorch CPU and CUDA GPU binaries for Linux and Windows. Large download.
-* [Dfx-lite](https://www.nuget.org/packages/Dfx-lite)</br>
+* [dfx-lite](https://www.nuget.org/packages/dfx-lite)</br>
   Includes the Torch backend but not the LibTorch binaries.
 
 ### Using local LibTorch binaries (optional)
 
-You can combine the `Dfx-lite` package bundle with existing local native binaries of LibTorch for your OS (Linux, Mac, or Windows) installed through other means.
+You can combine the `dfx-lite` package bundle with existing local native binaries of LibTorch for your OS (Linux, Mac, or Windows) installed through other means.
 
 LibTorch is the main tensor computation core implemented in C++/CUDA and it is used by PyTorch in Python and by other projects in various programming languages. The following are two common ways of having LibTorch in your system.
 

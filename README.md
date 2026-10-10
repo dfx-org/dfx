@@ -10,7 +10,7 @@ This is the development branch of Dfx 1.0.
 
 ## From DiffSharp to Dfx
 
-Dfx is the next chapter of the work begun in DiffSharp. We are deeply grateful to DiffSharp's creators, maintainers, contributors, and community, whose ideas, care, and many years of work made this project possible. Dfx is intended to carry that work forward with respect for its history and with sincere appreciation for everyone who helped build its foundation.
+Dfx is the continuation of [DiffSharp](https://github.com/DiffSharp/DiffSharp). We are deeply grateful to DiffSharp's creators, maintainers, contributors, and community, whose ideas, care, and many years of work made this project possible. In particular, we offer our sincere thanks to [Dr. Atılım Güneş Baydin](https://www.cs.ox.ac.uk/people/atilim.gunes.baydin/) for creating and leading DiffSharp and for his foundational contributions to differentiable programming in F#.
 
 Dfx is a tensor library with support for [differentiable programming](https://en.wikipedia.org/wiki/Differentiable_programming). It is designed for use in machine learning, probabilistic programming, optimization and other domains.
 
@@ -43,7 +43,7 @@ We welcome all contributions.
 
 ## The Team
 
-Dfx carries forward DiffSharp, which was developed by [Atılım Güneş Baydin](http://www.robots.ox.ac.uk/~gunes/), [Don Syme](https://www.microsoft.com/en-us/research/people/dsyme/) and other contributors, having started as a project supervised by the automatic differentiation wizards [Barak Pearlmutter](https://scholar.google.com/citations?user=AxFrw0sAAAAJ&hl=en) and [Jeffrey Siskind](https://scholar.google.com/citations?user=CgSBtPYAAAAJ&hl=en).
+Dfx carries forward [DiffSharp](https://github.com/DiffSharp/DiffSharp), which was developed by [Dr. Atılım Güneş Baydin](https://www.cs.ox.ac.uk/people/atilim.gunes.baydin/), [Don Syme](https://www.microsoft.com/en-us/research/people/dsyme/) and other contributors, having started as a project supervised by the automatic differentiation wizards [Barak Pearlmutter](https://scholar.google.com/citations?user=AxFrw0sAAAAJ&hl=en) and [Jeffrey Siskind](https://scholar.google.com/citations?user=CgSBtPYAAAAJ&hl=en).
 
 ## License
 

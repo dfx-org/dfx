@@ -58,10 +58,10 @@ COPY ./ ${HOME}/notebooks/
 RUN chown -R ${NB_UID} ${HOME}
 USER ${USER}
 
-# Clone and build Dfx-cpu bundle to get the latest TorchSharp and libtorch-cpu packages downloaded and cached by nuget within the Docker image
-# This the makes user experience faster when running #r "nuget: Dfx-cpu
+# Clone and build dfx-cpu bundle to get the latest TorchSharp and libtorch-cpu packages downloaded and cached by nuget within the Docker image
+# This the makes user experience faster when running #r "nuget: dfx-cpu
 RUN git clone --depth 1 https://github.com/dfx-org/dfx.git \
-    && dotnet build Dfx/bundles/Dfx-cpu
+    && dotnet build Dfx/bundles/dfx-cpu
 
 #Install nteract 
 RUN pip install nteract_on_jupyter

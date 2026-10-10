@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <PackageId>dfx-cpu</PackageId>
   </PropertyGroup>
+  
   <ItemGroup>
     <Compile Include="Empty.fs" />
   </ItemGroup>
@@ -12,7 +14,9 @@
     <ProjectReference Include="..\..\src\Dfx.Data\Dfx.Data.fsproj" />
     <ProjectReference Include="..\..\src\Dfx.Backends.Reference\Dfx.Backends.Reference.fsproj" />
     <ProjectReference Include="..\..\src\Dfx.Backends.Torch\Dfx.Backends.Torch.fsproj" />
-	<PackageReference Update="FSharp.Core" Version="$(FSharpCoreVersion)" />
+    <!-- reference a TorchSharp bundle with libtorch runtime redist -->
+    <PackageReference Include="TorchSharp-cpu" Version="$(TorchSharpVersion)" />
+	  <PackageReference Update="FSharp.Core" Version="$(FSharpCoreVersion)" />
   </ItemGroup>
 
 </Project>
