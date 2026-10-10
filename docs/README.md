@@ -4,7 +4,7 @@
 
 The `Dockerfile` and `NuGet.config` allow us to run generated notebooks in [MyBinder](https://mybinder.org)
 
-* `master` branch of diffsharp/diffsharp.github.io:  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/diffsharp/diffsharp.github.io/master)
+* `gh-pages` branch of dfx-org/dfx: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dfx-org/dfx/gh-pages)
 
 # Generating docs
 

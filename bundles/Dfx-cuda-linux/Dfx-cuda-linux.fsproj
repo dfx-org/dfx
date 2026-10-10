@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Empty.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dfx.Core\Dfx.Core.fsproj" />
+    <ProjectReference Include="..\..\src\Dfx.Data\Dfx.Data.fsproj" />
+    <ProjectReference Include="..\..\src\Dfx.Backends.Reference\Dfx.Backends.Reference.fsproj" />
+    <ProjectReference Include="..\..\src\Dfx.Backends.Torch\Dfx.Backends.Torch.fsproj" />
+    <!-- reference a TorchSharp bundle with libtorch runtime redist -->
+    <PackageReference Include="TorchSharp-cuda-linux" Version="$(TorchSharpVersion)" />
+  </ItemGroup>
+
+</Project>

@@ -2,6 +2,9 @@
 
 name: Build, test, generate docs, publish
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -45,7 +48,7 @@ jobs:
     - name: Run coveralls
       run: >
         dotnet csmacnz.Coveralls
-        --opencover -i tests/DiffSharp.Tests/coverage.opencover.xml
+        --opencover -i tests/Dfx.Tests/coverage.opencover.xml
         --useRelativePaths
         --repoToken ${{ secrets.COVERALLS_REPO_TOKEN }}
         --commitId ${{ github.sha }}
@@ -62,10 +65,9 @@ jobs:
     - name: Deploy docs
       uses: peaceiris/actions-gh-pages@v3
       with:
-        deploy_key: ${{ secrets.DIFFSHARP_GITHUB_IO_DEPLOY_DOCS_PRIVATE_KEY }}
-        external_repository: DiffSharp/diffsharp.github.io
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./output
-        publish_branch: master
+        publish_branch: gh-pages
         force_orphan: true
 
   pack_cpu:
@@ -101,8 +103,8 @@ jobs:
         dotnet-version: 6.0.x
     - name: Install dependencies
       run: dotnet restore
-    - name: Pack (DiffSharp-cuda-windows)
-      run: dotnet pack --configuration Release --verbosity normal bundles/DiffSharp-cuda-windows
+    - name: Pack (Dfx-cuda-windows)
+      run: dotnet pack --configuration Release --verbosity normal bundles/Dfx-cuda-windows
     - name: Publish NuGets
       run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_ORG_TOKEN_2022 }} --skip-duplicate
 
@@ -123,8 +125,8 @@ jobs:
       run: mv ./global.json ./global.bak || true
     - name: Install dependencies
       run: dotnet restore
-    - name: Pack (DiffSharp-cuda-linux)
-      run: dotnet pack --configuration Release --verbosity normal bundles/DiffSharp-cuda-linux
+    - name: Pack (Dfx-cuda-linux)
+      run: dotnet pack --configuration Release --verbosity normal bundles/Dfx-cuda-linux
     - name: Publish NuGets
       run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_ORG_TOKEN_2022 }} --skip-duplicate
 
@@ -145,7 +147,7 @@ jobs:
       run: mv ./global.json ./global.bak || true
     - name: Install dependencies
       run: dotnet restore
-    - name: Pack (DiffSharp-cuda)
-      run: dotnet pack --configuration Release --verbosity normal bundles/DiffSharp-cuda
+    - name: Pack (Dfx-cuda)
+      run: dotnet pack --configuration Release --verbosity normal bundles/Dfx-cuda
     - name: Publish NuGets
       run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_ORG_TOKEN_2022 }} --skip-duplicate

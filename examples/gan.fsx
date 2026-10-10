@@ -1,9 +1,9 @@
 #!/usr/bin/env -S dotnet fsi
 
-#I "../tests/DiffSharp.Tests/bin/Debug/net6.0"
-#r "DiffSharp.Core.dll"
-#r "DiffSharp.Data.dll"
-#r "DiffSharp.Backends.Torch.dll"
+#I "../tests/Dfx.Tests/bin/Debug/net6.0"
+#r "Dfx.Core.dll"
+#r "Dfx.Data.dll"
+#r "Dfx.Backends.Torch.dll"
 
 // Libtorch binaries
 // Option A: you can use a platform-specific nuget package
@@ -14,15 +14,15 @@
 // System.Runtime.InteropServices.NativeLibrary.Load("/home/gunes/anaconda3/lib/python3.8/site-packages/torch/lib/libtorch.so")
 
 
-open DiffSharp
-open DiffSharp.Compose
-open DiffSharp.Model
-open DiffSharp.Data
-open DiffSharp.Optim
-open DiffSharp.Util
+open Dfx
+open Dfx.Compose
+open Dfx.Model
+open Dfx.Data
+open Dfx.Optim
+open Dfx.Util
 
-dsharp.config(backend=Backend.Torch, device=Device.CPU)
-dsharp.seed(4)
+dfx.config(backend=Backend.Torch, device=Device.CPU)
+dfx.seed(4)
 
 let nz = 128
 
@@ -36,15 +36,15 @@ let nz = 128
 //     do base.add([fc1; fc2; fc3; fc4])
 //     override self.forward(x) =
 //         x
-//         |> dsharp.view([-1;nz])
+//         |> dfx.view([-1;nz])
 //         |> fc1.forward
-//         |> dsharp.leakyRelu(0.2)
+//         |> dfx.leakyRelu(0.2)
 //         |> fc2.forward
-//         |> dsharp.leakyRelu(0.2)
+//         |> dfx.leakyRelu(0.2)
 //         |> fc3.forward
-//         |> dsharp.leakyRelu(0.2)
+//         |> dfx.leakyRelu(0.2)
 //         |> fc4.forward
-//         |> dsharp.tanh
+//         |> dfx.tanh
 // type Discriminator(nz:int) =
 //     inherit Model()
 //     let fc1 = Linear(28*28, 1024)
@@ -54,46 +54,46 @@ let nz = 128
 //     do base.add([fc1; fc2; fc3; fc4])
 //     override self.forward(x) =
 //         x
-//         |> dsharp.view([-1;28*28])
+//         |> dfx.view([-1;28*28])
 //         |> fc1.forward
-//         |> dsharp.leakyRelu(0.2)
-//         |> dsharp.dropout(0.3)
+//         |> dfx.leakyRelu(0.2)
+//         |> dfx.dropout(0.3)
 //         |> fc2.forward
-//         |> dsharp.leakyRelu(0.2)
-//         |> dsharp.dropout(0.3)
+//         |> dfx.leakyRelu(0.2)
+//         |> dfx.dropout(0.3)
 //         |> fc3.forward
-//         |> dsharp.leakyRelu(0.2)
-//         |> dsharp.dropout(0.3)
+//         |> dfx.leakyRelu(0.2)
+//         |> dfx.dropout(0.3)
 //         |> fc4.forward
-//         |> dsharp.sigmoid
+//         |> dfx.sigmoid
 // let generator = Generator(nz)
 // let discriminator = Discriminator(nz)
 
-// DiffSharp compositional style
+// Dfx compositional style
 let generator =
-    dsharp.view([-1;nz])
+    dfx.view([-1;nz])
     --> Linear(nz, 256)
-    --> dsharp.leakyRelu(0.2)
+    --> dfx.leakyRelu(0.2)
     --> Linear(256, 512)
-    --> dsharp.leakyRelu(0.2)
+    --> dfx.leakyRelu(0.2)
     --> Linear(512, 1024)
-    --> dsharp.leakyRelu(0.2)
+    --> dfx.leakyRelu(0.2)
     --> Linear(1024, 28*28)
-    --> dsharp.tanh
+    --> dfx.tanh
 
 let discriminator =
-    dsharp.view([-1; 28*28])
+    dfx.view([-1; 28*28])
     --> Linear(28*28, 1024)
-    --> dsharp.leakyRelu(0.2)
-    --> dsharp.dropout(0.3)
+    --> dfx.leakyRelu(0.2)
+    --> dfx.dropout(0.3)
     --> Linear(1024, 512)
-    --> dsharp.leakyRelu(0.2)
-    --> dsharp.dropout(0.3)
+    --> dfx.leakyRelu(0.2)
+    --> dfx.dropout(0.3)
     --> Linear(512, 256)
-    --> dsharp.leakyRelu(0.2)
-    --> dsharp.dropout(0.3)
+    --> dfx.leakyRelu(0.2)
+    --> dfx.dropout(0.3)
     --> Linear(256, 1)
-    --> dsharp.sigmoid
+    --> dfx.sigmoid
 
 printfn "Generator\n%s" (generator.summary())
 
@@ -111,10 +111,10 @@ let urls = ["https://ossci-datasets.s3.amazonaws.com/mnist/train-images-idx3-uby
 let mnist = MNIST("../data", urls=urls, train=true, transform=fun t -> (t - 0.5) / 0.5)
 let loader = mnist.loader(batchSize=batchSize, shuffle=true)
 
-let gopt = Adam(generator, lr=dsharp.tensor(0.0002), beta1=dsharp.tensor(0.5))
-let dopt = Adam(discriminator, lr=dsharp.tensor(0.0002), beta1=dsharp.tensor(0.5))
+let gopt = Adam(generator, lr=dfx.tensor(0.0002), beta1=dfx.tensor(0.5))
+let dopt = Adam(discriminator, lr=dfx.tensor(0.0002), beta1=dfx.tensor(0.5))
 
-let fixedNoise = dsharp.randn([batchSize; nz])
+let fixedNoise = dfx.randn([batchSize; nz])
 
 let glosses = ResizeArray()
 let dlosses = ResizeArray()
@@ -124,8 +124,8 @@ let dgzs = ResizeArray()
 let start = System.DateTime.Now
 for epoch = 1 to epochs do
     for i, x, _ in loader.epoch() do
-        let labelReal = dsharp.ones([batchSize; 1])
-        let labelFake = dsharp.zeros([batchSize; 1])
+        let labelReal = dfx.ones([batchSize; 1])
+        let labelFake = dfx.zeros([batchSize; 1])
 
         // update discriminator
         generator.noDiff()
@@ -133,13 +133,13 @@ for epoch = 1 to epochs do
 
         let doutput = x --> discriminator
         let dx = doutput.mean() |> float
-        let dlossReal = dsharp.bceLoss(doutput, labelReal)
+        let dlossReal = dfx.bceLoss(doutput, labelReal)
 
-        let z = dsharp.randn([batchSize; nz])
+        let z = dfx.randn([batchSize; nz])
         let goutput = z --> generator
         let doutput = goutput --> discriminator
         let dgz = doutput.mean() |> float
-        let dlossFake = dsharp.bceLoss(doutput, labelFake)
+        let dlossFake = dfx.bceLoss(doutput, labelFake)
 
         let dloss = dlossReal + dlossFake
         dloss.reverse()
@@ -154,7 +154,7 @@ for epoch = 1 to epochs do
 
         let goutput = z --> generator
         let doutput = goutput --> discriminator
-        let gloss = dsharp.bceLoss(doutput, labelReal)
+        let gloss = dfx.bceLoss(doutput, labelReal)
         gloss.reverse()
         gopt.step()
         glosses.Add(float gloss)
@@ -171,8 +171,8 @@ for epoch = 1 to epochs do
             ((goutput.view([-1;1;28;28])+1)/2).saveImage(fakeFileName, normalize=false)
 
             let plt = Pyplot()
-            plt.plot(glosses |> dsharp.tensor, label="Generator")
-            plt.plot(dlosses |> dsharp.tensor, label="Discriminator")
+            plt.plot(glosses |> dfx.tensor, label="Generator")
+            plt.plot(dlosses |> dfx.tensor, label="Discriminator")
             plt.xlabel("Iterations")
             plt.ylabel("Loss")
             plt.legend()
@@ -180,8 +180,8 @@ for epoch = 1 to epochs do
             plt.savefig (sprintf "gan_loss_epoch_%A_minibatch_%A.pdf" epoch (i+1))
 
             let plt = Pyplot()
-            plt.plot(dxs |> dsharp.tensor, label="d(x)")
-            plt.plot(dgzs |> dsharp.tensor, label="d(g(z))")
+            plt.plot(dxs |> dfx.tensor, label="d(x)")
+            plt.plot(dgzs |> dfx.tensor, label="d(g(z))")
             plt.xlabel("Iterations")
             plt.ylabel("Score")
             plt.legend()

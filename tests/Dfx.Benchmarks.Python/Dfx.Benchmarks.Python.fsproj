@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- configure these manually -->
+    <TINY>false</TINY>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <DefineConstants Condition="'$(TINY)' == 'true'">$(DefineConstants);TINY</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Dfx.Benchmarks\PerfMatrix.fs" />
+    <Compile Include="BasicTensorOpsPerfPython.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+    <PackageReference Include="pythonnet_netstandard_py38_win" Version="2.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dfx.Core\Dfx.Core.fsproj" />
+    <ProjectReference Include="..\..\src\Dfx.Data\Dfx.Data.fsproj" />
+   	<PackageReference Update="FSharp.Core" Version="$(FSharpCoreVersion)" />
+  </ItemGroup>
+
+</Project>

@@ -1,9 +1,9 @@
 #!/usr/bin/env -S dotnet fsi
 
-#I "../tests/DiffSharp.Tests/bin/Debug/net6.0"
-#r "DiffSharp.Core.dll"
-#r "DiffSharp.Data.dll"
-#r "DiffSharp.Backends.Torch.dll"
+#I "../tests/Dfx.Tests/bin/Debug/net6.0"
+#r "Dfx.Core.dll"
+#r "Dfx.Data.dll"
+#r "Dfx.Backends.Torch.dll"
 
 // Libtorch binaries
 // Option A: you can use a platform-specific nuget package
@@ -14,15 +14,15 @@
 // System.Runtime.InteropServices.NativeLibrary.Load("/home/gunes/anaconda3/lib/python3.8/site-packages/torch/lib/libtorch.so")
 
 
-open DiffSharp
-open DiffSharp.Model
-open DiffSharp.Compose
-open DiffSharp.Optim
-open DiffSharp.Data
-open DiffSharp.Util
+open Dfx
+open Dfx.Model
+open Dfx.Compose
+open Dfx.Optim
+open Dfx.Data
+open Dfx.Util
 
-dsharp.config(backend=Backend.Torch, device=Device.CPU)
-dsharp.seed(0)
+dfx.config(backend=Backend.Torch, device=Device.CPU)
+dfx.seed(0)
 
 // PyTorch style
 // type Classifier() =
@@ -35,33 +35,33 @@ dsharp.seed(0)
 //     override self.forward(x) =
 //         x
 //         |> conv1.forward
-//         |> dsharp.relu
+//         |> dfx.relu
 //         |> conv2.forward
-//         |> dsharp.relu
-//         |> dsharp.maxpool2d(2)
-//         |> dsharp.dropout(0.25)
-//         |> dsharp.flatten(1)
+//         |> dfx.relu
+//         |> dfx.maxpool2d(2)
+//         |> dfx.dropout(0.25)
+//         |> dfx.flatten(1)
 //         |> fc1.forward
-//         |> dsharp.relu
-//         |> dsharp.dropout(0.5)
+//         |> dfx.relu
+//         |> dfx.dropout(0.5)
 //         |> fc2.forward
-//         |> dsharp.logsoftmax(dim=1)
+//         |> dfx.logsoftmax(dim=1)
 // let classifier = Classifier()
 
-// DiffSharp compositional style
+// Dfx compositional style
 let classifier =
     Conv2d(1, 32, 3, 2)
-    --> dsharp.relu
+    --> dfx.relu
     --> Conv2d(32, 64, 3, 2)
-    --> dsharp.relu
-    --> dsharp.maxpool2d(2)
-    --> dsharp.dropout(0.25)
-    --> dsharp.flatten(1)
+    --> dfx.relu
+    --> dfx.maxpool2d(2)
+    --> dfx.dropout(0.25)
+    --> dfx.flatten(1)
     --> Linear(576, 128)
-    --> dsharp.relu
-    --> dsharp.dropout(0.5)
+    --> dfx.relu
+    --> dfx.dropout(0.5)
     --> Linear(128, 10)
-    --> dsharp.logsoftmax(dim=1)
+    --> dfx.logsoftmax(dim=1)
 
 let epochs = 20
 let batchSize = 64
@@ -80,13 +80,13 @@ let validLoader = validSet.loader(batchSize=batchSize, shuffle=false)
 
 printfn "Model:\n%s" (classifier.summary())
 
-let optimizer = Adam(classifier, lr=dsharp.tensor(0.001))
+let optimizer = Adam(classifier, lr=dfx.tensor(0.001))
 
 for epoch = 1 to epochs do
     for i, data, target in trainLoader.epoch() do
         classifier.reverseDiff()
         let output = data --> classifier
-        let l = dsharp.nllLoss(output, target)
+        let l = dfx.nllLoss(output, target)
         l.reverse()
         optimizer.step()
         if i % 10 = 0 then
@@ -95,11 +95,11 @@ for epoch = 1 to epochs do
 
     printfn "Computing validation loss"
     classifier.noDiff()
-    let mutable validLoss = dsharp.zero()
+    let mutable validLoss = dfx.zero()
     let mutable correct = 0
     for j, data, target in validLoader.epoch() do
         let output = data --> classifier
-        validLoss <- validLoss + dsharp.nllLoss(output, target, reduction="sum")
+        validLoss <- validLoss + dfx.nllLoss(output, target, reduction="sum")
         let pred = output.argmax(1)
         correct <- correct + int (pred.eq(target).sum())
     validLoss <- validLoss / validSet.length

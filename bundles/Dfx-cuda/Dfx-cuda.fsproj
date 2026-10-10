@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Empty.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dfx-cuda-windows\Dfx-cuda-windows.fsproj" />
+    <ProjectReference Include="..\Dfx-cuda-linux\Dfx-cuda-linux.fsproj" />
+  </ItemGroup>
+
+</Project>
