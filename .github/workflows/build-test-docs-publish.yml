@@ -25,14 +25,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
-    - name: Setup dotnet 5.0 (needed for Coveralls)
+    - name: Setup .NET 10
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 5.0.x
-    - name: Setup dotnet 6.0
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version: 6.0.x
+        dotnet-version: 10.0.x
     - name: Install dependencies
       run: dotnet restore
     - name: Install tool dependencies
@@ -103,7 +99,7 @@ jobs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 10.0.x
     - name: Install dependencies
       run: dotnet restore
     - name: Pack
@@ -128,7 +124,7 @@ jobs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 10.0.x
     - name: Install dependencies
       run: dotnet restore
     - name: Pack (Dfx-cuda-windows)
@@ -153,7 +149,7 @@ jobs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 6.0.102
+        dotnet-version: 10.0.x
     - name: Disable global.json
       run: mv ./global.json ./global.bak || true
     - name: Install dependencies
@@ -180,7 +176,7 @@ jobs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 6.0.102
+        dotnet-version: 10.0.x
     - name: Disable global.json
       run: mv ./global.json ./global.bak || true
     - name: Install dependencies

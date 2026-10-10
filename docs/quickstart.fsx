@@ -1,5 +1,5 @@
 (*** condition: prepare ***)
-#I "../tests/Dfx.Tests/bin/Debug/net6.0"
+#I "../tests/Dfx.Tests/bin/Debug/net10.0"
 #r "Dfx.Core.dll"
 #r "Dfx.Data.dll"
 #r "Dfx.Backends.Reference.dll"
@@ -18,7 +18,6 @@ open Dfx.Util
 (*** condition: ipynb ***)
 #if IPYNB
 // Google Colab only: uncomment and run the following to install dotnet and the F# kernel
-// !bash <(curl -Ls https://raw.githubusercontent.com/gbaydin/scripts/main/colab_dotnet6.sh)
 #endif // IPYNB
 (*** condition: ipynb ***)
 #if IPYNB

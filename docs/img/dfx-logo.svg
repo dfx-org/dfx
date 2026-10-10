@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title>Dfx</title>
+  <rect width="512" height="512" rx="96" fill="#172554"/>
+  <path d="M94 128h126c92 0 156 49 156 128s-64 128-156 128H94V128zm70 62v132h55c52 0 85-24 85-66s-33-66-85-66h-55z" fill="#fff"/>
+  <path d="M326 128h92l-84 123 90 133h-94l-44-73-44 73h-92l90-132-84-124h94l38 65 38-65z" fill="#38bdf8"/>
+</svg>

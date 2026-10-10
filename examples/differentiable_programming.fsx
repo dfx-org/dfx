@@ -1,6 +1,6 @@
 #!/usr/bin/env -S dotnet fsi
 
-#I "../tests/Dfx.Tests/bin/Debug/net6.0"
+#I "../tests/Dfx.Tests/bin/Debug/net10.0"
 #r "Dfx.Core.dll"
 #r "Dfx.Data.dll"
 #r "Dfx.Backends.Torch.dll"

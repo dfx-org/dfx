@@ -1,5 +1,5 @@
 ﻿(*** condition: prepare ***)
-#I "../tests/Dfx.Tests/bin/Debug/net6.0"
+#I "../tests/Dfx.Tests/bin/Debug/net10.0"
 #r "Dfx.Core.dll"
 #r "Dfx.Data.dll"
 #r "Dfx.Backends.Reference.dll"
@@ -15,7 +15,6 @@ Dfx.dfx.seed(123)
 (*** condition: ipynb ***)
 #if IPYNB
 // Google Colab only: uncomment and run the following to install dotnet and the F# kernel
-// !bash <(curl -Ls https://raw.githubusercontent.com/gbaydin/scripts/main/colab_dotnet6.sh)
 #endif // IPYNB
 (*** condition: ipynb ***)
 #if IPYNB
@@ -26,6 +25,8 @@ Dfx.dfx.seed(123)
 Formatter.SetPreferredMimeTypesFor(typeof<obj>, "text/plain")
 Formatter.Register(fun (x:obj) (writer: TextWriter) -> fprintfn writer "%120A" x )
 #endif // IPYNB
+
+(*** do-not-eval-file ***)
 
 (**
 [![Binder](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dfx-org/dfx/blob/gh-pages/{{fsdocs-source-basename}}.ipynb)&emsp;
@@ -44,12 +45,14 @@ There are various ways in which you can run Dfx, the main ones being: [interacti
 
 You can use Dfx in [dotnet interactive](https://github.com/dotnet/interactive) notebooks in [Visual Studio Code](https://code.visualstudio.com/) or [Jupyter](https://jupyter.org/), or in F# scripts (`.fsx` files), by referencing the package as follows:
 
-    // Use one of the following three lines
-    #r "nuget: Dfx-cpu" // Use the latest version
-    #r "nuget: Dfx-cpu, *-*" // Use the latest pre-release version
-    #r "nuget: Dfx-cpu, 1.0.1" // Use a specific version
+```text
+// Use one of the following three lines
+&#35;r "nuget: Dfx-cpu" // Use the latest version
+&#35;r "nuget: Dfx-cpu, *-*" // Use the latest pre-release version
+&#35;r "nuget: Dfx-cpu, 1.0.7" // Use a specific version
 
-    open Dfx
+open Dfx
+```
 
 </br>
 <img src="img/anim-intro-1.gif" width="85%" />

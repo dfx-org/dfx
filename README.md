@@ -1,5 +1,7 @@
 # Dfx
 
+<img src="docs/img/dfx-logo.svg" alt="Dfx logo" width="120">
+
 [![Build Status](https://github.com/dfx-org/dfx/actions/workflows/build-test-docs-publish.yml/badge.svg?branch=main)](https://github.com/dfx-org/dfx/actions)
 
 This is the development branch of Dfx 1.0.
