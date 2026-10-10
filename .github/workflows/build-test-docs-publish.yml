@@ -1,9 +1,8 @@
-# note, the nuget org token expires around June 2021
-
 name: Build, test, generate docs, publish
 
 permissions:
-  contents: write
+  contents: read
+  id-token: write
 
 on:
   push:
@@ -13,19 +12,25 @@ on:
       - v*             # Push events to v1.2.3 tag
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Setup dotnet 5.0 (needed for Coveralls)
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 5.0.x
     - name: Setup dotnet 6.0
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 6.0.x
     - name: Install dependencies
@@ -42,15 +47,18 @@ jobs:
       run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --configuration Release --no-build --verbosity normal
     - name: Get git commit info
       run: |
-        echo "GIT_COMMIT_AUTHOR=$(git log -1 --pretty=%cn)" >> $GITHUB_ENV
-        echo "GIT_COMMIT_AUTHOR_EMAIL=$(git log -1 --pretty=%ce)" >> $GITHUB_ENV
-        echo "GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%s)" >> $GITHUB_ENV
+        printf '%s\n' \
+          "GIT_COMMIT_AUTHOR=$(git log -1 --pretty=%cn)" \
+          "GIT_COMMIT_AUTHOR_EMAIL=$(git log -1 --pretty=%ce)" \
+          "GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%s)" \
+          >> "$GITHUB_ENV"
     - name: Run coveralls
+      if: ${{ env.COVERALLS_REPO_TOKEN != '' }}
       run: >
         dotnet csmacnz.Coveralls
         --opencover -i tests/Dfx.Tests/coverage.opencover.xml
         --useRelativePaths
-        --repoToken ${{ secrets.COVERALLS_REPO_TOKEN }}
+        --repoToken "$COVERALLS_REPO_TOKEN"
         --commitId ${{ github.sha }}
         --commitBranch ${{ github.ref }}
         --commitAuthor "${{ env.GIT_COMMIT_AUTHOR }}"
@@ -62,13 +70,28 @@ jobs:
       # uses: codecov/codecov-action@v1
     - name: Run fsdocs
       run: dotnet fsdocs build --eval --strict --properties Configuration=Release
-    - name: Deploy docs
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Upload GitHub Pages artifact
+      if: ${{ github.ref == 'refs/heads/main' }}
+      uses: actions/upload-pages-artifact@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./output
-        publish_branch: gh-pages
-        force_orphan: true
+        path: ./output
+
+  deploy_docs:
+
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Deploy documentation to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
 
   pack_cpu:
 
@@ -76,17 +99,22 @@ jobs:
     needs: build
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 6.0.x
     - name: Install dependencies
       run: dotnet restore
     - name: Pack
       run: dotnet pack --configuration Release --verbosity normal
+    - name: Obtain NuGet key
+      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841
+      id: login
+      with:
+        user: dsyme
     - name: Publish NuGets
-      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_ORG_TOKEN_2022 }} --skip-duplicate
+      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
 
   # Done in a separate job because it downloads the massive Windows CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
@@ -96,17 +124,22 @@ jobs:
     needs: build
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 6.0.x
     - name: Install dependencies
       run: dotnet restore
     - name: Pack (Dfx-cuda-windows)
       run: dotnet pack --configuration Release --verbosity normal bundles/Dfx-cuda-windows
+    - name: Obtain NuGet key
+      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841
+      id: login
+      with:
+        user: dsyme
     - name: Publish NuGets
-      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_ORG_TOKEN_2022 }} --skip-duplicate
+      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
 
   # Done in a separate job because it downloads the massive Linux CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
@@ -116,9 +149,9 @@ jobs:
     needs: build
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 6.0.102
     - name: Disable global.json
@@ -127,8 +160,13 @@ jobs:
       run: dotnet restore
     - name: Pack (Dfx-cuda-linux)
       run: dotnet pack --configuration Release --verbosity normal bundles/Dfx-cuda-linux
+    - name: Obtain NuGet key
+      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841
+      id: login
+      with:
+        user: dsyme
     - name: Publish NuGets
-      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_ORG_TOKEN_2022 }} --skip-duplicate
+      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
 
   # Done in a separate job because it downloads the massive Linux CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
@@ -138,9 +176,9 @@ jobs:
     needs: build
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 6.0.102
     - name: Disable global.json
@@ -149,5 +187,13 @@ jobs:
       run: dotnet restore
     - name: Pack (Dfx-cuda)
       run: dotnet pack --configuration Release --verbosity normal bundles/Dfx-cuda
+    - name: Obtain NuGet key
+      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841
+      id: login
+      with:
+        user: dsyme
     - name: Publish NuGets
-      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_ORG_TOKEN_2022 }} --skip-duplicate
+      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
+
+# Trusted publishing uses NuGet OIDC.
+# See: https://learn.microsoft.com/nuget/nuget-org/publish-a-package#trusted-publishing
