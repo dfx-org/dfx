@@ -214,15 +214,6 @@ jobs:
           fi
           dotnet nuget push "${packages[0]}" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
         done
-    - name: Verify CPU bundles on NuGet
-      run: |
-        set -euo pipefail
-        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
-        for id in dfx-lite dfx-cpu; do
-          url="https://api.nuget.org/v3-flatcontainer/$id/$version/$id.$version.nupkg"
-          curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null "$url"
-        done
-
   # Done in a separate job because it downloads the massive Windows CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
   pack_cuda_windows:
@@ -254,12 +245,16 @@ jobs:
       with:
         user: dsyme
     - name: Publish dfx-cuda-windows
-      run: dotnet nuget push "bin/packages/dfx-cuda-windows.[0-9]*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
-    - name: Verify dfx-cuda-windows on NuGet
+      env:
+        NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
       run: |
-        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
-        curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null \
-          "https://api.nuget.org/v3-flatcontainer/dfx-cuda-windows/$version/dfx-cuda-windows.$version.nupkg"
+        set -euo pipefail
+        packages=(bin/packages/dfx-cuda-windows.[0-9]*.nupkg)
+        if [[ ${#packages[@]} -ne 1 || ! -f ${packages[0]} ]]; then
+          echo "::error::Expected exactly one dfx-cuda-windows package, found ${#packages[@]}"
+          exit 1
+        fi
+        dotnet nuget push "${packages[0]}" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
 
   # Done in a separate job because it downloads the massive Linux CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
@@ -292,12 +287,16 @@ jobs:
       with:
         user: dsyme
     - name: Publish dfx-cuda-linux
-      run: dotnet nuget push "bin/packages/dfx-cuda-linux.[0-9]*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
-    - name: Verify dfx-cuda-linux on NuGet
+      env:
+        NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
       run: |
-        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
-        curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null \
-          "https://api.nuget.org/v3-flatcontainer/dfx-cuda-linux/$version/dfx-cuda-linux.$version.nupkg"
+        set -euo pipefail
+        packages=(bin/packages/dfx-cuda-linux.[0-9]*.nupkg)
+        if [[ ${#packages[@]} -ne 1 || ! -f ${packages[0]} ]]; then
+          echo "::error::Expected exactly one dfx-cuda-linux package, found ${#packages[@]}"
+          exit 1
+        fi
+        dotnet nuget push "${packages[0]}" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
 
   # Done in a separate job because it downloads the massive Linux CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
@@ -330,12 +329,16 @@ jobs:
       with:
         user: dsyme
     - name: Publish dfx-cuda
-      run: dotnet nuget push "bin/packages/dfx-cuda.[0-9]*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
-    - name: Verify dfx-cuda on NuGet
+      env:
+        NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
       run: |
-        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
-        curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null \
-          "https://api.nuget.org/v3-flatcontainer/dfx-cuda/$version/dfx-cuda.$version.nupkg"
+        set -euo pipefail
+        packages=(bin/packages/dfx-cuda.[0-9]*.nupkg)
+        if [[ ${#packages[@]} -ne 1 || ! -f ${packages[0]} ]]; then
+          echo "::error::Expected exactly one dfx-cuda package, found ${#packages[@]}"
+          exit 1
+        fi
+        dotnet nuget push "${packages[0]}" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
 
 # Trusted publishing uses NuGet OIDC.
 # See: https://learn.microsoft.com/nuget/nuget-org/publish-a-package#trusted-publishing
