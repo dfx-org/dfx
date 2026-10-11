@@ -48,7 +48,7 @@ dfx.seed(0)
 //         |> dfx.logsoftmax(dim=1)
 // let classifier = Classifier()
 
-// Dfx compositional style
+// dfx compositional style
 let classifier =
     Conv2d(1, 32, 3, 2)
     --> dfx.relu
@@ -111,4 +111,3 @@ for epoch = 1 to epochs do
     printfn "True labels     : %A " (sampleLabels.int())
     let predictedLabels = (samples --> classifier).argmax(dim=1)
     printfn "Predicted labels: %A\n" predictedLabels
-

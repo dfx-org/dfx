@@ -395,7 +395,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
     override t.GatherT(dim:int, indices) =
         Shape.checkCanGather t.Shape dim indices.Shape indices.Dtype
 
-        // NOTE: Dfx currently expects indices as an Int32 tensor, Torch wants Int64
+        // NOTE: dfx currently expects indices as an Int32 tensor, Torch wants Int64
         let indices = indices.Cast(Dtype.Int64)
         let res =
             // LibTorch Gather on float16/bfloat16 gives : method_name not implemented for 'BFloat16'
@@ -407,7 +407,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
 
     override t.ScatterT(dim:int, indices, destinationShape:Shape) =
         Shape.checkCanScatter t.Shape dim indices.Shape indices.Dtype destinationShape
-        // NOTE: Dfx currently expects indices as an Int32 tensor, Torch wants Int64
+        // NOTE: dfx currently expects indices as an Int32 tensor, Torch wants Int64
         let indices = indices.Cast(Dtype.Int64)
         let res = t.ZerosLike(destinationShape)
         // LibTorch Scatter on float16/bfloat16 gives : method_name not implemented for 'BFloat16'
@@ -622,7 +622,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
         // Torch uses "true division" mirroring Python 3
         // https://www.python.org/dev/peps/pep-0238/
         // https://pytorch.org/docs/stable/generated/torch.div.html
-        // also see https://github.com/Dfx/Dfx/issues/239
+        // also see https://github.com/dfx-org/dfx/issues/239
         let outtype = Dtype.divisionType t1.Dtype t2.Dtype
         t1.MakeLike(result.to_type(toTorchType outtype), dtype=outtype)
 
@@ -635,7 +635,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
         // Torch uses "true division" mirroring Python 3
         // https://www.python.org/dev/peps/pep-0238/
         // https://pytorch.org/docs/stable/generated/torch.div.html
-        // also see https://github.com/Dfx/Dfx/issues/239
+        // also see https://github.com/dfx-org/dfx/issues/239
         let outtype = widenScalarForDivision t2.Dtype t1.Dtype
         t2.MakeLike(result.to_type(toTorchType outtype), dtype=outtype)
 
@@ -649,7 +649,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
         // Torch uses "true division" mirroring Python 3
         // https://www.python.org/dev/peps/pep-0238/
         // https://pytorch.org/docs/stable/generated/torch.div.html
-        // also see https://github.com/Dfx/Dfx/issues/239
+        // also see https://github.com/dfx-org/dfx/issues/239
         let outtype = widenScalarForDivision t1.Dtype (fromTorchType t2.Type)
         t1.MakeLike(result.to_type(toTorchType outtype), dtype=outtype)
 
@@ -755,7 +755,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
         | Dtype.Bool | Dtype.Integral -> opNotSupported "MaxPool1D" dtype
         | _ ->
         let struct (resultt, indicest) = torch.nn.functional.max_pool1d_with_indices(tt, int64 kernelSize, stride=int64 stride, padding=int64 padding, dilation=1L)
-        // NOTE: Dfx currently expects indices as an Int32 tensor
+        // NOTE: dfx currently expects indices as an Int32 tensor
         let indices = t1.MakeLike(indicest, shape=outputShape, dtype=Dtype.Int64).Cast(Dtype.Int32)
         let result = t1.MakeLike(resultt, shape=outputShape)
         result, indices
@@ -764,7 +764,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
         let _batchSize, _channels, _inputDimensions, _kernelDimensions, _outputDimensions, outputShape =
             Shape.checkCanMaxpool2d dtype t1.Shape kernelSize strides paddings
         let struct (resultt, indicest) = torch.nn.functional.max_pool2d_with_indices(tt, int64s kernelSize, strides=int64s strides, padding=int64s paddings)
-        // NOTE: Dfx currently expects indices as an Int32 tensor, Torch wants Int64
+        // NOTE: dfx currently expects indices as an Int32 tensor, Torch wants Int64
         let indices = t1.MakeLike(indicest, shape=outputShape, dtype=Dtype.Int64).Cast(Dtype.Int32)
         let result = t1.MakeLike(resultt, shape=outputShape)
         result, indices
@@ -774,7 +774,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
             Shape.checkCanMaxpool3d dtype t1.Shape kernelSize strides paddings
         let struct (resultt, indicest) = torch.nn.functional.max_pool3d_with_indices(tt, int64s kernelSize, strides=int64s strides, padding=int64s paddings)
 
-        // NOTE: Dfx currently expects indices as an Int32 tensor
+        // NOTE: dfx currently expects indices as an Int32 tensor
         let indices = t1.MakeLike(indicest, shape=outputShape, dtype=Dtype.Int64).Cast(Dtype.Int32)
         let result = t1.MakeLike(resultt, shape=outputShape)
         result, indices
@@ -782,7 +782,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
     override t1.MaxUnpool1D(indices, outputSize) =
         let _batchSize, _channels, _inputSize, outputShape =
             Shape.checkCanMaxunpool1d dtype t1.Shape indices.Dtype indices.Shape outputSize
-        // NOTE: Dfx currently expects indices as an Int32 tensor
+        // NOTE: dfx currently expects indices as an Int32 tensor
         let indices = indices.Cast(Dtype.Int64)
         let resultt = torchMaxUnpool tt indices.TorchTensor outputShape
         t1.MakeLike(resultt, shape=outputShape)
@@ -790,7 +790,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
     override t1.MaxUnpool2D(indices, outputSize) =
         let _batchSize, _channels, _inputDimensions, outputShape =
             Shape.checkCanMaxunpool2d dtype t1.Shape indices.Dtype indices.Shape outputSize
-        // NOTE: Dfx currently expects indices as an Int32 tensor
+        // NOTE: dfx currently expects indices as an Int32 tensor
         let indices = indices.Cast(Dtype.Int64)
         let resultt = torchMaxUnpool tt indices.TorchTensor outputShape
         t1.MakeLike(resultt, shape=outputShape)
@@ -798,7 +798,7 @@ type TorchRawTensor(tt: torch.Tensor, shape: Shape, dtype: Dtype, device: Device
     override t1.MaxUnpool3D(indices, outputSize) =
         let _batchSize, _channels, _inputDimensions, outputShape =
             Shape.checkCanMaxunpool3d dtype t1.Shape indices.Dtype indices.Shape outputSize
-        // NOTE: Dfx currently expects indices as an Int32 tensor
+        // NOTE: dfx currently expects indices as an Int32 tensor
         let indices = indices.Cast(Dtype.Int64)
         let resultt = torchMaxUnpool tt indices.TorchTensor outputShape
         t1.MakeLike(resultt, shape=outputShape)

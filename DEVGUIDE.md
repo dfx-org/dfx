@@ -1,4 +1,4 @@
-# Dfx - Development Guide
+# dfx - Development Guide
 
 You can clone this repository to your machine as follows:
 ```
@@ -16,12 +16,12 @@ Use the following command in the root directory of this repository:
 dotnet test --logger "console;verbosity=detailed"
 ```
 
-## Build Dfx in Docker
+## Build dfx in Docker
 
 Required:
 - Install [Docker](https://hub.docker.com/search/?type=edition&offering=community) for your system
 
-Build a Docker image called `dfx`. This will work without any local .NET Core installation and build Dfx inside the image.
+Build a Docker image called `dfx`. This will work without any local .NET Core installation and build dfx inside the image.
 ```
 docker build -t dfx .
 ```
@@ -37,7 +37,7 @@ To add features you may have extend TorchSharp to make extra features of LibTorc
 
 The build is set up to look for a parallel build of TorchSharp, e.g.
 
-    C:\GitHub\dsyme\Dfx
+    C:\GitHub\dsyme\dfx
     C:\GitHub\dsyme\TorchSharp
 
 To build, test and pack TorchSharp in that repo do this:
@@ -55,7 +55,7 @@ with warning:
 
     warning : Packages will be incomplete and unusable on other platforms...
 
-To consume the packages into Dfx adjust TorchSharpVersion in Directory.Build.props.
+To consume the packages into dfx adjust TorchSharpVersion in Directory.Build.props.
 
 When rebuilding the TorchSharp you will need to clear your package cache to pick up the new nuget package with the same version id, e.g.
 

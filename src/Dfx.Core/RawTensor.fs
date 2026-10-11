@@ -10,7 +10,7 @@ open Dfx
 open Dfx.Util
 
 /// <summary>
-///   Represents the static functionality for tensors implemented by a Dfx backend.
+///   Represents the static functionality for tensors implemented by a dfx backend.
 /// </summary>
 ///
 /// <namespacedoc>
@@ -74,7 +74,7 @@ type BackendTensorStatics() =
         hook.Get(?backend=backend)
 
 /// <summary>
-///   Represents a raw (i.e. non-differentiable immutable) tensor implemented by a Dfx backend.
+///   Represents a raw (i.e. non-differentiable immutable) tensor implemented by a dfx backend.
 /// </summary>
 ///
 /// <remarks>
@@ -915,4 +915,3 @@ type RawTensor() =
 
     /// Gets a tensor filled with random integers from the given range 
     abstract RandomIntInPlace: low:int * high:int -> unit
-

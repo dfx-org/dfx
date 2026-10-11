@@ -18,7 +18,7 @@ Dfx.dfx.seed(123)
 #endif // IPYNB
 (*** condition: ipynb ***)
 #if IPYNB
-// Import Dfx package
+// Import dfx package
 #r "nuget: dfx-lite,{{fsdocs-package-version}}"
 
 // Set dotnet interactive formatter to plaintext
@@ -36,30 +36,28 @@ Formatter.Register(fun (x:obj) (writer: TextWriter) -> fprintfn writer "%120A" x
 
 # Installing
 
-Dfx runs on [dotnet](https://dotnet.microsoft.com/), a cross-platform, open-source platform supported on Linux, macOS, and Windows.
+dfx runs on [dotnet](https://dotnet.microsoft.com/), a cross-platform, open-source platform supported on Linux, macOS, and Windows.
 
-There are various ways in which you can run Dfx, the main ones being: [interactive notebooks](https://github.com/dotnet/interactive) supporting [Visual Studio Code](https://code.visualstudio.com/) and [Jupyter](https://jupyter.org/); running in a [REPL](https://github.com/jonsequitur/dotnet-repl); running [script files](https://docs.microsoft.com/en-us/dotnet/fsharp/tools/fsharp-interactive/); and [compiling, packing, and publishing](https://docs.microsoft.com/en-us/dotnet/core/introduction) performant binaries.
+There are various ways in which you can run dfx, the main ones being: [interactive notebooks](https://github.com/dotnet/interactive) supporting [Visual Studio Code](https://code.visualstudio.com/) and [Jupyter](https://jupyter.org/); running in a [REPL](https://github.com/jonsequitur/dotnet-repl); running [script files](https://docs.microsoft.com/en-us/dotnet/fsharp/tools/fsharp-interactive/); and [compiling, packing, and publishing](https://docs.microsoft.com/en-us/dotnet/core/introduction) performant binaries.
 
 
 ## Interactive Notebooks and Scripts
 
-You can use Dfx in [dotnet interactive](https://github.com/dotnet/interactive) notebooks in [Visual Studio Code](https://code.visualstudio.com/) or [Jupyter](https://jupyter.org/), or in F# scripts (`.fsx` files), by referencing the package as follows:
+You can use dfx in [dotnet interactive](https://github.com/dotnet/interactive) notebooks in [Visual Studio Code](https://code.visualstudio.com/) or [Jupyter](https://jupyter.org/), or in F# scripts (`.fsx` files), by referencing the package as follows:
 
-```text
-// Use one of the following three lines
+<pre><code>// Use one of the following three lines
 &#35;r "nuget: dfx-cpu" // Use the latest version
 &#35;r "nuget: dfx-cpu, *-*" // Use the latest pre-release version
-&#35;r "nuget: dfx-cpu, 1.0.8" // Use a specific version
-
+&#35;r "nuget: dfx-cpu, 1.0.10" // Use a specific version
 open Dfx
-```
+</code></pre>
 
 </br>
 <img src="img/anim-intro-1.gif" width="85%" />
 
 ## Dotnet Applications
 
-You can add Dfx to your dotnet application using the [dotnet](https://dotnet.microsoft.com/) command-line interface (CLI).
+You can add dfx to your dotnet application using the [dotnet](https://dotnet.microsoft.com/) command-line interface (CLI).
 
 For example, the following creates a new F# console application and adds the latest pre-release version of the `dfx-cpu` package as a dependency.
 
@@ -85,10 +83,10 @@ You can combine the `dfx-lite` package bundle with existing local native binarie
 
 LibTorch is the main tensor computation core implemented in C++/CUDA and it is used by PyTorch in Python and by other projects in various programming languages. The following are two common ways of having LibTorch in your system.
 
-* If you use Python and have [PyTorch](https://pytorch.org/) installed, this comes with LibTorch as a part of the PyTorch distribution. If your GPU works in this PyTorch installation without any issues, it will also work in Dfx.
+* If you use Python and have [PyTorch](https://pytorch.org/) installed, this comes with LibTorch as a part of the PyTorch distribution. If your GPU works in this PyTorch installation without any issues, it will also work in dfx.
 * You can download the native LibTorch package without Python by following the [get started](https://pytorch.org/get-started/locally/) instructions in the PyTorch website, and extracting the downloaded archive to a folder in your system.
 
-Before using the `Torch` backend in Dfx, you will have to add an explicit load of the LibTorch native library, which you can do as follows. In order to find the location of LibTorch binaries, searching for `libtorch.so` in your system might be helpful. Note that this file is called `libtorch.so` in Linux, `libtorch.dylib` in macOS, and `torch.dll` in Windows.
+Before using the `Torch` backend in dfx, you will have to add an explicit load of the LibTorch native library, which you can do as follows. In order to find the location of LibTorch binaries, searching for `libtorch.so` in your system might be helpful. Note that this file is called `libtorch.so` in Linux, `libtorch.dylib` in macOS, and `torch.dll` in Windows.
 
     open System.Runtime.InteropServices
     NativeLibrary.Load("/home/user/anaconda3/lib/python3.8/site-packages/torch/lib/libtorch.so")
@@ -96,9 +94,9 @@ Before using the `Torch` backend in Dfx, you will have to add an explicit load o
 
 ## Backends and Devices
 
-Dfx currently provides two computation backends.
+dfx currently provides two computation backends.
 
-* The `Torch` backend is the default and recommended backend based on [LibTorch](https://pytorch.org/cppdocs/), using the same C++ and CUDA implementations for tensor computations that power [PyTorch](https://pytorch.org/). On top of these raw tensors (LibTorch's ATen, excluding autograd), Dfx implements its own computation graph and differentiation capabilities. This backend requires platform-specific binaries of LibTorch, which we provide and test on Linux, macOS, and Windows.
+* The `Torch` backend is the default and recommended backend based on [LibTorch](https://pytorch.org/cppdocs/), using the same C++ and CUDA implementations for tensor computations that power [PyTorch](https://pytorch.org/). On top of these raw tensors (LibTorch's ATen, excluding autograd), dfx implements its own computation graph and differentiation capabilities. This backend requires platform-specific binaries of LibTorch, which we provide and test on Linux, macOS, and Windows.
 
 * The `Reference` backend is implemented purely in F# and can run on any hardware platform where [dotnet](https://dotnet.microsoft.com/) can run (for example iOS, Android, Raspberry Pi). This backend has reasonable performance for use cases dominated by scalar and small tensor operations, and is not recommended for use cases involving large tensor operations (such as machine learning). This backend is always available.
 
@@ -141,9 +139,9 @@ Tensors can be moved between devices (for example from CPU to GPU) using `cref:M
 let t2 = t.move(Device.GPU)
 
 (**
-## Developing Dfx Libraries
+## Developing dfx Libraries
 
-To develop libraries built on Dfx, you can use the following guideline to reference the various packages.
+To develop libraries built on dfx, you can use the following guideline to reference the various packages.
 
 * Reference `Dfx.Core` and `Dfx.Data` in your library code.
 * Reference `Dfx.Backends.Reference` in your correctness testing code.

@@ -16,7 +16,7 @@ open System.Diagnostics.CodeAnalysis
 /// </summary>
 ///
 /// <namespacedoc>
-///   <summary>Contains utilities and library extensions related to the Dfx programming model.</summary>
+///   <summary>Contains utilities and library extensions related to the dfx programming model.</summary>
 /// </namespacedoc>
 module Array =
 

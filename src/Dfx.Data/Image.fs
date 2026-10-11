@@ -11,7 +11,7 @@ open System
 open System.IO
 
 
-/// Contains auto-opened utilities related to the Dfx programming model.
+/// Contains auto-opened utilities related to the dfx programming model.
 [<AutoOpen>]
 module ImageUtil =
     /// Saves the given pixel array to a file and optionally resizes it in the process. Resizing uses bicubic interpolation. Supports .png and .jpg formats.

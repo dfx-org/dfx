@@ -21,7 +21,7 @@ open Dfx.Util
 #endif // IPYNB
 (*** condition: ipynb ***)
 #if IPYNB
-// Import Dfx package
+// Import dfx package
 #r "nuget: dfx-lite,{{fsdocs-package-version}}"
 #r "nuget: SixLabors.ImageSharp,1.0.1"
 
@@ -38,17 +38,17 @@ Formatter.Register(fun (x:obj) (writer: TextWriter) -> fprintfn writer "%120A" x
 
 # Quickstart
 
-Here we cover some key tasks involved in a typical machine learning pipeline and how these can be implemented with Dfx. Note that a significant part of Dfx's design has been influenced by [PyTorch](https://pytorch.org/) and you would feel mostly at home if you have familiarity with PyTorch.
+Here we cover some key tasks involved in a typical machine learning pipeline and how these can be implemented with dfx. Note that a significant part of dfx's design has been influenced by [PyTorch](https://pytorch.org/) and you would feel mostly at home if you have familiarity with PyTorch.
 
 ## Datasets and Data Loaders
 
-Dfx provides the `cref:T:Dfx.Data.Dataset` type that represents a data source and the `cref:T:Dfx.Data.DataLoader` type that handles the loading of data from datasets and iterating over [minibatches](https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Iterative_method) of data.
+dfx provides the `cref:T:Dfx.Data.Dataset` type that represents a data source and the `cref:T:Dfx.Data.DataLoader` type that handles the loading of data from datasets and iterating over [minibatches](https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Iterative_method) of data.
 
 See the [Dfx.Data](/reference/dfx-data.html) namespace for the full API reference.
 
 ### Datasets
 
-Dfx has ready-to-use types that cover main datasets typically used in machine learning, such as `cref:T:Dfx.Data.MNIST`, `cref:T:Dfx.Data.CIFAR10`, `cref:T:Dfx.Data.CIFAR100`, and also more generic dataset types such as `cref:T:Dfx.Data.TensorDataset` or `cref:T:Dfx.Data.ImageDataset`.
+dfx has ready-to-use types that cover main datasets typically used in machine learning, such as `cref:T:Dfx.Data.MNIST`, `cref:T:Dfx.Data.CIFAR10`, `cref:T:Dfx.Data.CIFAR100`, and also more generic dataset types such as `cref:T:Dfx.Data.TensorDataset` or `cref:T:Dfx.Data.ImageDataset`.
 
 The following loads the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset and shows one image entry and the corresponding label.
 *)
@@ -106,7 +106,7 @@ for epoch = 1 to 10 do
 
 Many machine learning models are differentiable functions whose parameters can be tuned via [gradient-based optimization](https://en.wikipedia.org/wiki/Gradient_descent), finding an optimum for an objective function that quantifies the fit of the model to a given set of data. These models are typically built as compositions non-linear functions and ready-to-use building blocks such as linear, recurrent, and convolutional layers.
 
-Dfx provides the most commonly used model building blocks including convolutions, transposed convolutions, batch normalization, dropout, recurrent and other architectures.
+dfx provides the most commonly used model building blocks including convolutions, transposed convolutions, batch normalization, dropout, recurrent and other architectures.
 
 See the [Dfx.Model](/reference/dfx-model.html) namespace for the full API reference.
 
@@ -172,14 +172,14 @@ print dis
 (*** include-output ***)
 
 (**
-### Constructing models, Dfx style
+### Constructing models, dfx style
 
-A key advantage of Dfx lies in the [functional programming](https://en.wikipedia.org/wiki/Functional_programming) paradigm enabled by the F# language, where functions are first-class citizens, many algorithms can be constructed by applying and composing functions, and differentiation operations can be expressed as composable [higher-order functions](https://en.wikipedia.org/wiki/Higher-order_function). This allows very succinct (and beautiful) machine learning code to be expressed as a powerful combination of [lambda calculus](https://en.wikipedia.org/wiki/Lambda_calculus) and [differential calculus](https://en.wikipedia.org/wiki/Differential_calculus).
+A key advantage of dfx lies in the [functional programming](https://en.wikipedia.org/wiki/Functional_programming) paradigm enabled by the F# language, where functions are first-class citizens, many algorithms can be constructed by applying and composing functions, and differentiation operations can be expressed as composable [higher-order functions](https://en.wikipedia.org/wiki/Higher-order_function). This allows very succinct (and beautiful) machine learning code to be expressed as a powerful combination of [lambda calculus](https://en.wikipedia.org/wiki/Lambda_calculus) and [differential calculus](https://en.wikipedia.org/wiki/Differential_calculus).
 
-For example, the following constructs the same GAN architecture (that we constructed in PyTorch style in the previous section) using Dfx's `-->` composition operator, which allows you to seamlessly compose `Model` instances and differentiable `Tensor->Tensor` functions.
+For example, the following constructs the same GAN architecture (that we constructed in PyTorch style in the previous section) using dfx's `-->` composition operator, which allows you to seamlessly compose `Model` instances and differentiable `Tensor->Tensor` functions.
 *)
 
-// Dfx style
+// dfx style
 
 // Model as a composition of models and Tensor->Tensor functions
 let generator =

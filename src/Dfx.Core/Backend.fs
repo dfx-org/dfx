@@ -5,7 +5,7 @@
 
 namespace Dfx
 
-/// Represents a backend for Dfx tensors
+/// Represents a backend for dfx tensors
 [<RequireQualifiedAccess>]
 type Backend =
     /// The reference backend 

@@ -8,7 +8,7 @@ namespace Dfx
 open System
 open System.Reflection
 
-/// Represents a scalar on the Dfx programming model
+/// Represents a scalar in the dfx programming model
 type scalar = System.IConvertible
 
 [<AutoOpen>]

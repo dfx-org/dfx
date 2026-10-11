@@ -3,7 +3,7 @@
 //
 // BSD 2-Clause License. See LICENSE in root of repository.
 
-/// Contains utilities related to the Dfx programming model.
+/// Contains utilities related to the dfx programming model.
 namespace Dfx.Util
 
 open System
@@ -398,7 +398,7 @@ module DataConverter =
         dataOfValues System.Convert.ToBoolean System.Convert.ToBoolean System.Convert.ToBoolean System.Convert.ToBoolean System.Convert.ToBoolean System.Convert.ToBoolean id System.Convert.ToBoolean value 
 
 
-/// Contains auto-opened utilities related to the Dfx programming model.
+/// Contains auto-opened utilities related to the dfx programming model.
 [<AutoOpen>]
 module UtilAutoOpens =
 

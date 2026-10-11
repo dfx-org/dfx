@@ -14,7 +14,7 @@ open System.IO.Compression
 open System.Net
 
 
-/// Contains auto-opened utilities related to the Dfx programming model.
+/// Contains auto-opened utilities related to the dfx programming model.
 [<AutoOpen>]
 module DataUtil =
     /// Synchronously downloads the given URL to the given local file.

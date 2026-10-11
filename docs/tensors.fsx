@@ -18,7 +18,7 @@ Dfx.dfx.seed(123)
 #endif // IPYNB
 (*** condition: ipynb ***)
 #if IPYNB
-// Import Dfx package
+// Import dfx package
 #r "nuget: dfx-lite,{{fsdocs-package-version}}"
 
 // Set dotnet interactive formatter to plaintext

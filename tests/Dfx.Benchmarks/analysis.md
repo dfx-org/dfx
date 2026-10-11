@@ -32,7 +32,7 @@ These are pretty much as you'd expect:
 
 * The reference backend has low overhead to reach down into the actual tensor data but is significantly slower on actual floating point performance 
 
-* Overall we don't expect Dfx to be fast on tiny tensors. Indeed for this particular operation it's not until you have about tensors of about size 10,000 that the Torch CPU or GPU backends become faster than the current reference backend
+* Overall we don't expect dfx to be fast on tiny tensors. Indeed for this particular operation it's not until you have about tensors of about size 10,000 that the Torch CPU or GPU backends become faster than the current reference backend
 
 * Note that the reference backend addition operation is implemented in a tight loop and .NET will do an OK job on this - many other operations in the reference backend are implemented far less efficiently.
 
@@ -40,7 +40,6 @@ The above does argue for the value of a fast purely .NET backend for problems do
 
 I also separately checked the cost of adding dummy fields to "RawTensor" - each dummy copy of "shape" seemed to add about 3% cost to Torch CPU for tiny tensors,
 this obviously becomes less important as tensors grow in size.
-
 
 
 

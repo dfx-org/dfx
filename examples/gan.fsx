@@ -69,7 +69,7 @@ let nz = 128
 // let generator = Generator(nz)
 // let discriminator = Discriminator(nz)
 
-// Dfx compositional style
+// dfx compositional style
 let generator =
     dfx.view([-1;nz])
     --> Linear(nz, 256)

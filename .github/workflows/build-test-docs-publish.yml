@@ -116,11 +116,66 @@ jobs:
       id: deployment
       uses: actions/deploy-pages@v4
 
-  pack_cpu:
+  pack_core:
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: test_release
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: 10.0.x
+    - name: Cache NuGet packages
+      uses: actions/cache@v6
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-core-${{ hashFiles('**/*.fsproj', 'Directory.Build.props', 'global.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-core-
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Pack core packages
+      run: |
+        dotnet pack src/Dfx.Core/Dfx.Core.fsproj --configuration Release --no-restore --verbosity normal
+        dotnet pack src/Dfx.Data/Dfx.Data.fsproj --configuration Release --no-restore --verbosity normal
+        dotnet pack src/Dfx.Backends.Reference/Dfx.Backends.Reference.fsproj --configuration Release --no-restore --verbosity normal
+        dotnet pack src/Dfx.Backends.Torch/Dfx.Backends.Torch.fsproj --configuration Release --no-restore --verbosity normal
+    - name: Obtain NuGet key
+      uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841
+      id: login
+      with:
+        user: dsyme
+    - name: Publish core packages
+      env:
+        NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+      run: |
+        set -euo pipefail
+        for id in Dfx.Core Dfx.Data Dfx.Backends.Reference Dfx.Backends.Torch; do
+          packages=(bin/packages/"$id".[0-9]*.nupkg)
+          if [[ ${#packages[@]} -ne 1 || ! -f ${packages[0]} ]]; then
+            echo "::error::Expected exactly one package for $id, found ${#packages[@]}"
+            exit 1
+          fi
+          dotnet nuget push "${packages[0]}" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
+        done
+    - name: Verify core packages on NuGet
+      run: |
+        set -euo pipefail
+        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
+        for id in Dfx.Core Dfx.Data Dfx.Backends.Reference Dfx.Backends.Torch; do
+          normalized_id=${id,,}
+          url="https://api.nuget.org/v3-flatcontainer/$normalized_id/$version/$normalized_id.$version.nupkg"
+          curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null "$url"
+        done
+
+  pack_cpu:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: pack_core
 
     steps:
     - uses: actions/checkout@v7
@@ -137,15 +192,36 @@ jobs:
           ${{ runner.os }}-nuget-cpu-
     - name: Install dependencies
       run: dotnet restore
-    - name: Pack
-      run: dotnet pack --configuration Release --no-restore --verbosity normal
+    - name: Pack CPU bundles
+      run: |
+        dotnet pack bundles/dfx-lite/Dfx-lite.fsproj --configuration Release --no-restore --verbosity normal
+        dotnet pack bundles/dfx-cpu/Dfx-cpu.fsproj --configuration Release --no-restore --verbosity normal
     - name: Obtain NuGet key
       uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841
       id: login
       with:
         user: dsyme
-    - name: Publish NuGets
-      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
+    - name: Publish CPU bundles
+      env:
+        NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+      run: |
+        set -euo pipefail
+        for id in dfx-lite dfx-cpu; do
+          packages=(bin/packages/"$id".[0-9]*.nupkg)
+          if [[ ${#packages[@]} -ne 1 || ! -f ${packages[0]} ]]; then
+            echo "::error::Expected exactly one package for $id, found ${#packages[@]}"
+            exit 1
+          fi
+          dotnet nuget push "${packages[0]}" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
+        done
+    - name: Verify CPU bundles on NuGet
+      run: |
+        set -euo pipefail
+        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
+        for id in dfx-lite dfx-cpu; do
+          url="https://api.nuget.org/v3-flatcontainer/$id/$version/$id.$version.nupkg"
+          curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null "$url"
+        done
 
   # Done in a separate job because it downloads the massive Windows CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
@@ -153,7 +229,7 @@ jobs:
 
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: test_release
+    needs: pack_core
 
     steps:
     - uses: actions/checkout@v7
@@ -177,8 +253,13 @@ jobs:
       id: login
       with:
         user: dsyme
-    - name: Publish NuGets
-      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
+    - name: Publish dfx-cuda-windows
+      run: dotnet nuget push "bin/packages/dfx-cuda-windows.[0-9]*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
+    - name: Verify dfx-cuda-windows on NuGet
+      run: |
+        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
+        curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null \
+          "https://api.nuget.org/v3-flatcontainer/dfx-cuda-windows/$version/dfx-cuda-windows.$version.nupkg"
 
   # Done in a separate job because it downloads the massive Linux CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
@@ -186,7 +267,7 @@ jobs:
 
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: test_release
+    needs: pack_core
 
     steps:
     - uses: actions/checkout@v7
@@ -210,8 +291,13 @@ jobs:
       id: login
       with:
         user: dsyme
-    - name: Publish NuGets
-      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
+    - name: Publish dfx-cuda-linux
+      run: dotnet nuget push "bin/packages/dfx-cuda-linux.[0-9]*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
+    - name: Verify dfx-cuda-linux on NuGet
+      run: |
+        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
+        curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null \
+          "https://api.nuget.org/v3-flatcontainer/dfx-cuda-linux/$version/dfx-cuda-linux.$version.nupkg"
 
   # Done in a separate job because it downloads the massive Linux CUDA packages (though only for reference
   # during the package build, it doesn't actually use them)
@@ -219,7 +305,7 @@ jobs:
 
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: test_release
+    needs: pack_core
 
     steps:
     - uses: actions/checkout@v7
@@ -243,8 +329,13 @@ jobs:
       id: login
       with:
         user: dsyme
-    - name: Publish NuGets
-      run: dotnet nuget push "bin/packages/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
+    - name: Publish dfx-cuda
+      run: dotnet nuget push "bin/packages/dfx-cuda.[0-9]*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --skip-duplicate
+    - name: Verify dfx-cuda on NuGet
+      run: |
+        version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
+        curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null \
+          "https://api.nuget.org/v3-flatcontainer/dfx-cuda/$version/dfx-cuda.$version.nupkg"
 
 # Trusted publishing uses NuGet OIDC.
 # See: https://learn.microsoft.com/nuget/nuget-org/publish-a-package#trusted-publishing

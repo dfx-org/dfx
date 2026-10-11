@@ -18,7 +18,7 @@ Dfx.dfx.seed(123)
 #endif // IPYNB
 (*** condition: ipynb ***)
 #if IPYNB
-// Import Dfx package
+// Import dfx package
 #r "nuget: dfx-lite,{{fsdocs-package-version}}"
 
 // Set dotnet interactive formatter to plaintext
@@ -32,14 +32,14 @@ Formatter.Register(fun (x:obj) (writer: TextWriter) -> fprintfn writer "%120A" x
 [![Script](img/badge-script.svg)]({{fsdocs-source-basename}}.fsx)&emsp;
 [![Script](img/badge-notebook.svg)]({{fsdocs-source-basename}}.ipynb)
 
-# Extending Dfx
+# Extending dfx
 
 
-Dfx provides most of the essential operations found in tensor libraries such as [NumPy](https://numpy.org/), [PyTorch](https://pytorch.org/), and [TensorFlow](https://www.tensorflow.org/). All differentiable operations support the forward, reverse, and nested differentiation modes.
+dfx provides most of the essential operations found in tensor libraries such as [NumPy](https://numpy.org/), [PyTorch](https://pytorch.org/), and [TensorFlow](https://www.tensorflow.org/). All differentiable operations support the forward, reverse, and nested differentiation modes.
 
-When implementing new operations, you should prefer to implement these as compositions of existing Dfx `cref:T:Dfx.Tensor` operations, which would give you differentiability out of the box.
+When implementing new operations, you should prefer to implement these as compositions of existing dfx `cref:T:Dfx.Tensor` operations, which would give you differentiability out of the box.
 
-In the rare cases where you need to extend Dfx with a completely new differentiable operation that cannot be implemented as a composition of existing operations, you can use the provided extension API.
+In the rare cases where you need to extend dfx with a completely new differentiable operation that cannot be implemented as a composition of existing operations, you can use the provided extension API.
 
 ## Simple elementwise functions
 
