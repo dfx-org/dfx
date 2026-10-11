@@ -1,4 +1,4 @@
 namespace Dfx
 
 // This project is to bundle Dfx.Core and some default backends into a single project
-// See Dfx.Core for main dfx code
+// See the dfx-Dfx.Core package for main dfx code

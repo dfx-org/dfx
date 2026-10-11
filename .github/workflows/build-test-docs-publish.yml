@@ -153,7 +153,7 @@ jobs:
         NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
       run: |
         set -euo pipefail
-        for id in Dfx.Core Dfx.Data Dfx.Backends.Reference Dfx.Backends.Torch; do
+        for id in dfx-Dfx.Core dfx-Dfx.Data dfx-Dfx.Backends.Reference dfx-Dfx.Backends.Torch; do
           packages=(bin/packages/"$id".[0-9]*.nupkg)
           if [[ ${#packages[@]} -ne 1 || ! -f ${packages[0]} ]]; then
             echo "::error::Expected exactly one package for $id, found ${#packages[@]}"
@@ -165,7 +165,7 @@ jobs:
       run: |
         set -euo pipefail
         version=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props)
-        for id in Dfx.Core Dfx.Data Dfx.Backends.Reference Dfx.Backends.Torch; do
+        for id in dfx-Dfx.Core dfx-Dfx.Data dfx-Dfx.Backends.Reference dfx-Dfx.Backends.Torch; do
           normalized_id=${id,,}
           url="https://api.nuget.org/v3-flatcontainer/$normalized_id/$version/$normalized_id.$version.nupkg"
           curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 10 --output /dev/null "$url"

@@ -143,9 +143,9 @@ let t2 = t.move(Device.GPU)
 
 To develop libraries built on dfx, you can use the following guideline to reference the various packages.
 
-* Reference `Dfx.Core` and `Dfx.Data` in your library code.
-* Reference `Dfx.Backends.Reference` in your correctness testing code.
-* Reference `Dfx.Backends.Torch` and `libtorch-cpu` in your CPU testing code.
-* Reference `Dfx.Backends.Torch` and `libtorch-cuda-linux` or `libtorch-cuda-windows` in your (optional) GPU testing code.
+* Reference the `dfx-Dfx.Core` and `dfx-Dfx.Data` packages in your library code.
+* Reference the `dfx-Dfx.Backends.Reference` package in your correctness testing code.
+* Reference the `dfx-Dfx.Backends.Torch` and `libtorch-cpu` packages in your CPU testing code.
+* Reference the `dfx-Dfx.Backends.Torch` and `libtorch-cuda-linux` or `libtorch-cuda-windows` packages in your (optional) GPU testing code.
 
 *)
