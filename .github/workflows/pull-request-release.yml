@@ -54,6 +54,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+    # libtorch-cpu-osx-arm64 loads libomp from /opt/homebrew/opt/libomp/lib/libomp.dylib
+    - name: Install libomp
+      run: brew install libomp
     - name: Setup dotnet
       uses: actions/setup-dotnet@v6
       with:
