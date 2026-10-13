@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\dfx-cuda-windows\Dfx-cuda-windows.fsproj" />
     <ProjectReference Include="..\dfx-cuda-linux\Dfx-cuda-linux.fsproj" />
+    <PackageReference Update="FSharp.Core" Version="$(FSharpCoreVersion)" />
   </ItemGroup>
 
 </Project>
