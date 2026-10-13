@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://dfx-org.github.io/dfx/
+    about: Installation, getting started and API reference.
+  - name: Report a security vulnerability
+    url: https://github.com/dfx-org/dfx/security/advisories/new
+    about: Please report security vulnerabilities privately rather than in a public issue.
