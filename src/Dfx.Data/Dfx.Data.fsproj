@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dfx.Core\Dfx.Core.fsproj" />
   	<PackageReference Update="FSharp.Core" Version="$(FSharpCoreVersion)" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.13" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.3" />
   </ItemGroup>
 
 </Project>
