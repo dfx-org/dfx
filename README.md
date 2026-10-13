@@ -36,10 +36,7 @@ Please use [GitHub issues](https://github.com/dfx-org/dfx/issues) to share bug r
 
 ## Contributing
 
-We welcome all contributions.
-
-* Bug fixes: if you encounter a bug, please open an [issue](https://github.com/dfx-org/dfx/issues) describing the bug. If you are planning to contribute a bug fix, please feel free to do so in a pull request.
-* New features: if you plan to contribute new features, please first open an [issue](https://github.com/dfx-org/dfx/issues) to discuss the feature before creating a pull request.
+We welcome bug reports, feature requests and ideas. Please [open an issue](https://github.com/dfx-org/dfx/issues/new/choose) rather than a pull request; see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## The Team
 

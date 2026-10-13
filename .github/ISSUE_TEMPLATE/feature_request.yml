@@ -1,0 +1,20 @@
+name: Feature request
+description: Suggest a new capability or an improvement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do?
+      description: Describe the use case or the problem this would solve.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API or behaviour
+      description: If you have an idea of how it could look, sketch it here. Pointing to the equivalent in PyTorch or another library is welcome.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds

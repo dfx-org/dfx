@@ -1,0 +1,35 @@
+name: Bug report
+description: Something in dfx does not work as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report a bug. A small code sample that reproduces it helps the most.
+  - type: input
+    id: version
+    attributes:
+      label: dfx package and version
+      placeholder: dfx-cpu 1.0.10
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: .NET SDK version, operating system, and CPU or GPU (with the CUDA version, if relevant)
+      placeholder: .NET SDK 10.0.100, Windows 11, NVIDIA GPU with CUDA 12.8
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you expect to happen, and what happened instead? Include the full error message or stack trace.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Code to reproduce
+      description: A minimal F# script or code sample that shows the problem.
+      render: fsharp
