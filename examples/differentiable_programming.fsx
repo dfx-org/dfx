@@ -7,9 +7,9 @@
 
 // Libtorch binaries
 // Option A: you can use a platform-specific nuget package
-#r "nuget: TorchSharp-cpu, 0.96.5"
-// #r "nuget: TorchSharp-cuda-linux, 0.96.5"
-// #r "nuget: TorchSharp-cuda-windows, 0.96.5"
+#r "nuget: TorchSharp-cpu, 0.107.0"
+// #r "nuget: TorchSharp-cuda-linux, 0.107.0"
+// #r "nuget: TorchSharp-cuda-windows, 0.107.0"
 // Option B: you can use a local libtorch installation
 // System.Runtime.InteropServices.NativeLibrary.Load("/home/gunes/anaconda3/lib/python3.8/site-packages/torch/lib/libtorch.so")
 
@@ -33,7 +33,7 @@ type DiffProg<'In, 'Out> = Model<'In, 'Out>
 
 
 let diffprog parameters (f:'In->'Out) : DiffProg<'In, 'Out>=
-    DiffProg<'In, 'Out>.create [] parameters [] f
+    DiffProg<'In, 'Out>(f, parameters=parameters)
 
 let param (x:Tensor) = Parameter(x)
 
