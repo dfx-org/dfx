@@ -1,11 +1,3 @@
-
-
-# Running notebooks in MyBinder
-
-The `Dockerfile` and `NuGet.config` allow us to run generated notebooks in [MyBinder](https://mybinder.org)
-
-* `gh-pages` branch of dfx-org/dfx: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dfx-org/dfx/gh-pages)
-
 # Generating docs
 
 
@@ -29,8 +21,3 @@ Then:
 
 Notebooks are generated for all .md and .fsx files under docs as part of the build.
 
-* Dockerfile - see https://github.com/dotnet/interactive/blob/master/docs/CreateBinder.md
-
-* NuGet.config - likewise
-
-See MyBinder for creating URLs

@@ -1,7 +1,7 @@
 blank_issues_enabled: true
 contact_links:
   - name: Documentation
-    url: https://dfx-org.github.io/dfx/
+    url: https://docs.dfx.ac/
     about: Installation, getting started and API reference.
   - name: Report a security vulnerability
     url: https://github.com/dfx-org/dfx/security/advisories/new

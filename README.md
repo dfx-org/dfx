@@ -26,7 +26,7 @@ dfx is a tensor library with support for [differentiable programming](https://en
 
 ## Documentation
 
-You can find the documentation at [dfx-org.github.io/dfx](https://dfx-org.github.io/dfx/), including information on installation and getting started.
+You can find the documentation at [docs.dfx.ac](https://docs.dfx.ac/), including information on installation and getting started.
 
 Release notes can be found [here](https://github.com/dfx-org/dfx/blob/main/RELEASE_NOTES.md).
 

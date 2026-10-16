@@ -14,10 +14,6 @@ Dfx.dfx.seed(123)
 #endif // FSX
 (*** condition: ipynb ***)
 #if IPYNB
-// Google Colab only: uncomment and run the following to install dotnet and the F# kernel
-#endif // IPYNB
-(*** condition: ipynb ***)
-#if IPYNB
 // Import dfx package
 #r "nuget: dfx-lite,{{fsdocs-package-version}}"
 
@@ -27,8 +23,6 @@ Formatter.Register(fun (x:obj) (writer: TextWriter) -> fprintfn writer "%120A" x
 #endif // IPYNB
 
 (**
-[![Binder](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dfx-org/dfx/blob/gh-pages/{{fsdocs-source-basename}}.ipynb)&emsp;
-[![Binder](img/badge-binder.svg)](https://mybinder.org/v2/gh/dfx-org/dfx/gh-pages?filepath={{fsdocs-source-basename}}.ipynb)&emsp;
 [![Script](img/badge-script.svg)]({{fsdocs-source-basename}}.fsx)&emsp;
 [![Script](img/badge-notebook.svg)]({{fsdocs-source-basename}}.ipynb)
 
@@ -84,12 +78,8 @@ dfx uses [the incredible F# programming language](https://dot.net/fsharp) for te
 
 ## Interactive Notebooks
 
-All documentation pages in this website are interactive notebooks which you can execute directly in your browser without installing anything in your local machine.
-
-Using the buttons [![Binder](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dfx-org/dfx/blob/gh-pages/{{fsdocs-source-basename}}.ipynb) [![Binder](img/badge-binder.svg)](https://mybinder.org/v2/gh/dfx-org/dfx/gh-pages?filepath={{fsdocs-source-basename}}.ipynb) on the top of each page, you can execute the page as an interactive notebook running on cloud servers provided by [Google Colab](https://colab.research.google.com/) and [Binder](https://mybinder.org/).
-
 Using the buttons [![Script](img/badge-script.svg)]({{fsdocs-source-basename}}.fsx)
-[![Script](img/badge-notebook.svg)]({{fsdocs-source-basename}}.ipynb) you can also download a page as a script or an interactive notebook, which you can execute locally in [Jupyter](https://jupyter.org/) or [Visual Studio Code](https://code.visualstudio.com/) using [dotnet interactive](https://github.com/dotnet/interactive).
+[![Script](img/badge-notebook.svg)]({{fsdocs-source-basename}}.ipynb) at the top of each page, you can download the page as a script or an interactive notebook, which you can execute locally in [Jupyter](https://jupyter.org/) or [Visual Studio Code](https://code.visualstudio.com/) using [dotnet interactive](https://github.com/dotnet/interactive).
 
 ## Example
 
