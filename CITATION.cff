@@ -14,7 +14,7 @@ authors:
   - name: DiffSharp contributors
   - name: dfx contributors
 repository-code: https://github.com/dfx-org/dfx
-url: https://dfx-org.github.io/dfx/
+url: https://docs.dfx.ac/
 license: BSD-2-Clause
 keywords:
   - automatic differentiation
