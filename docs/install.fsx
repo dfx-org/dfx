@@ -30,7 +30,7 @@ Formatter.Register(fun (x:obj) (writer: TextWriter) -> fprintfn writer "%120A" x
 
 # Installing
 
-dfx runs on [dotnet](https://dotnet.microsoft.com/), a cross-platform, open-source platform supported on Linux, macOS, and Windows.
+dfx runs on [dotnet](https://dotnet.microsoft.com/), a cross-platform, open-source platform supported on Linux, macOS, and Windows. dfx requires .NET 10 or later.
 
 There are various ways in which you can run dfx, the main ones being: [interactive notebooks](https://github.com/dotnet/interactive) supporting [Visual Studio Code](https://code.visualstudio.com/) and [Jupyter](https://jupyter.org/); running in a [REPL](https://github.com/jonsequitur/dotnet-repl); running [script files](https://docs.microsoft.com/en-us/dotnet/fsharp/tools/fsharp-interactive/); and [compiling, packing, and publishing](https://docs.microsoft.com/en-us/dotnet/core/introduction) performant binaries.
 
@@ -53,11 +53,11 @@ open Dfx
 
 You can add dfx to your dotnet application using the [dotnet](https://dotnet.microsoft.com/) command-line interface (CLI).
 
-For example, the following creates a new F# console application and adds the latest pre-release version of the `dfx-cpu` package as a dependency.
+For example, the following creates a new F# console application and adds the latest version of the `dfx-cpu` package as a dependency.
 
     dotnet new console -lang "F#" -o src/app
     cd src/app
-    dotnet add package --prerelease dfx-cpu
+    dotnet add package dfx-cpu
     dotnet run
 
 ## Packages
@@ -65,9 +65,11 @@ For example, the following creates a new F# console application and adds the lat
 We provide several package bundles for a variety of use cases.
 
 * [dfx-cpu](https://www.nuget.org/packages/dfx-cpu)</br>
-  Includes LibTorch CPU binaries for Linux, macOS, and Windows.
+  Includes LibTorch CPU binaries for Linux (x64), macOS (Apple Silicon), and Windows (x64). On macOS, install OpenMP first with `brew install libomp`.
 * [dfx-cuda-linux](https://www.nuget.org/packages/dfx-cuda-linux) / [dfx-cuda-windows](https://www.nuget.org/packages/dfx-cuda-windows)</br>
-  Include LibTorch CPU and CUDA GPU binaries for Linux and Windows. Large download.
+  Include LibTorch CPU and CUDA 12.8 GPU binaries for Linux and Windows. Large download.
+* [dfx-cuda](https://www.nuget.org/packages/dfx-cuda)</br>
+  References both `dfx-cuda-linux` and `dfx-cuda-windows`.
 * [dfx-lite](https://www.nuget.org/packages/dfx-lite)</br>
   Includes the Torch backend but not the LibTorch binaries.
 
@@ -139,7 +141,7 @@ To develop libraries built on dfx, you can use the following guideline to refere
 
 * Reference the `dfx-Dfx.Core` and `dfx-Dfx.Data` packages in your library code.
 * Reference the `dfx-Dfx.Backends.Reference` package in your correctness testing code.
-* Reference the `dfx-Dfx.Backends.Torch` and `libtorch-cpu` packages in your CPU testing code.
-* Reference the `dfx-Dfx.Backends.Torch` and `libtorch-cuda-linux` or `libtorch-cuda-windows` packages in your (optional) GPU testing code.
+* Reference the `dfx-Dfx.Backends.Torch` and `TorchSharp-cpu` packages in your CPU testing code.
+* Reference the `dfx-Dfx.Backends.Torch` and `TorchSharp-cuda-linux` or `TorchSharp-cuda-windows` packages in your (optional) GPU testing code.
 
 *)
