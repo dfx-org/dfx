@@ -5,8 +5,16 @@ updates:
     schedule:
       interval: weekly
     groups:
+      # Minor and patch updates arrive together; major updates arrive one per pull request
       nuget:
         patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      # FSharp.Core sets the minimum FSharp.Core version for consumers of the packages, so it is updated deliberately
+      - dependency-name: FSharp.Core
+      # SixLabors.ImageSharp 3.0 and later are licensed under the Six Labors Split License
+      - dependency-name: SixLabors.ImageSharp
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
