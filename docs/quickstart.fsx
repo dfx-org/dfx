@@ -17,10 +17,6 @@ open Dfx.Util
 #endif // FSX
 (*** condition: ipynb ***)
 #if IPYNB
-// Google Colab only: uncomment and run the following to install dotnet and the F# kernel
-#endif // IPYNB
-(*** condition: ipynb ***)
-#if IPYNB
 // Import dfx package
 #r "nuget: dfx-lite,{{fsdocs-package-version}}"
 #r "nuget: SixLabors.ImageSharp,2.1.13"
@@ -31,8 +27,6 @@ Formatter.Register(fun (x:obj) (writer: TextWriter) -> fprintfn writer "%120A" x
 #endif // IPYNB
 
 (**
-[![Binder](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dfx-org/dfx/blob/gh-pages/{{fsdocs-source-basename}}.ipynb)&emsp;
-[![Binder](img/badge-binder.svg)](https://mybinder.org/v2/gh/dfx-org/dfx/gh-pages?filepath={{fsdocs-source-basename}}.ipynb)&emsp;
 [![Script](img/badge-script.svg)]({{fsdocs-source-basename}}.fsx)&emsp;
 [![Script](img/badge-notebook.svg)]({{fsdocs-source-basename}}.ipynb)
 
