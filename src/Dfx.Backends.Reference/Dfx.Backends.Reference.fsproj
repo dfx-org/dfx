@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>dfx-Dfx.Backends.Reference</PackageId>
+    <Description>The Reference backend for dfx, implemented in F#. It runs anywhere .NET runs and suits small tensors and testing. Most applications should reference a package that includes the LibTorch binaries, such as dfx-cpu, instead.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,10 +3,11 @@
 <img src="docs/img/dfx-logo.png" alt="dfx logo" width="120">
 
 [![Build Status](https://github.com/dfx-org/dfx/actions/workflows/build-test-docs-publish.yml/badge.svg?branch=main)](https://github.com/dfx-org/dfx/actions)
+[![NuGet](https://img.shields.io/nuget/v/dfx-cpu.svg)](https://www.nuget.org/packages/dfx-cpu)
 
 This is the development branch of dfx 1.0.
 
-> **NOTE: This branch is undergoing development. It has incomplete code, functionality, and design that are likely to change without notice; when using TorchSharp backend, only x64 platform is currently supported out of the box, see [DEVGUIDE.md] for more details.**
+> **NOTE: This branch is undergoing development. It has incomplete code, functionality, and design that are likely to change without notice.**
 
 ## From DiffSharp to dfx
 

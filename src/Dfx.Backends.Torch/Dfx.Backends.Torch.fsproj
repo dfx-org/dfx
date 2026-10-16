@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>dfx-Dfx.Backends.Torch</PackageId>
+    <Description>The Torch backend for dfx, using LibTorch through TorchSharp. It does not include the LibTorch binaries. Most applications should reference a package that includes the LibTorch binaries, such as dfx-cpu, instead.</Description>
   </PropertyGroup>
 
   <ItemGroup>

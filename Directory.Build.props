@@ -36,9 +36,11 @@
     <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <Copyright>Copyright 2014-2021 DiffSharp contributors; dfx contributors</Copyright>
-    <PackageTags>F# fsharp ML AI Machine Learning PyTorch Tensor Automatic Differentiation Gradients Differentiable Programming</PackageTags>
+    <PackageTags>dfx F# fsharp ML AI Machine Learning PyTorch LibTorch TorchSharp CUDA Tensor Automatic Differentiation autodiff Gradients Differentiable Programming DiffSharp</PackageTags>
     <Description>dfx is a tensor library with support for differentiable programming. It is designed for use in machine learning, probabilistic programming, optimization and other domains. For documentation and installation instructions visit: https://docs.dfx.ac/</Description>
     <FsDocsLogoSource>img/dfx-logo.png</FsDocsLogoSource>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!-- local build uses number unique by day -->
     <PackageVersion Condition="'$(GITHUB_ACTIONS)' != 'true'">$(Version)-local-$([System.DateTime]::Now.ToString(`yyMMdd`))</PackageVersion>
@@ -55,6 +57,11 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)bin/packages</PackageOutputPath>
     <NuspecProperties>Authors=$(Authors);Owners=$(Owners);ProjectId=$(MSBuildProjectName);PackageVersion=$(PackageVersion);TorchSharpVersion=$(TorchSharpVersion)</NuspecProperties>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)nuget/icon.png" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)nuget/README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
 
   <Target Name="Check" BeforeTargets="PrepareForBuild"
           Condition="'$(APPVEYOR_REPO_TAG)' != '' AND '$(APPVEYOR_REPO_TAG_NAME)' != '' AND '$(APPVEYOR_REPO_TAG_NAME)' != '$(Version)'">
