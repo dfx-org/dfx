@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>dfx-lite</PackageId>
+    <Description>dfx, a tensor library for F# with support for differentiable programming, without LibTorch binaries, for use with a LibTorch installed by other means, for example with PyTorch.</Description>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Empty.fs" />

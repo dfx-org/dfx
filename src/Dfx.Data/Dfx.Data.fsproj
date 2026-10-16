@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>dfx-Dfx.Data</PackageId>
+    <Description>Datasets, data loaders, image and plotting utilities for dfx. Most applications should reference a package that includes the LibTorch binaries, such as dfx-cpu, instead.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>dfx-cuda-windows</PackageId>
+    <Description>dfx, a tensor library for F# with support for differentiable programming, with the LibTorch CUDA 12.8 binaries for Windows (x64). Large download.</Description>
   </PropertyGroup>
 
   <ItemGroup>
