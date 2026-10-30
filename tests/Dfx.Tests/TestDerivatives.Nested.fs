@@ -182,5 +182,46 @@ type TestDerivativesNested () =
         Assert.True(f'''''xCorrect.allclose(f'''''x, 0.01))
         Assert.True(f''''''xCorrect.allclose(f''''''x, 0.01))
 
+    [<Test>]
+    member _.TestDerivativesOfConstantFunctions () =
+        // A function that does not depend on its input has zero derivatives, in forward and reverse mode
+        for combo in Combos.FloatingPointExcept16s do
+            let xs = combo.tensor(2.)
+            let xv = combo.tensor([1.; 2.])
+            Assert.CheckEqual(combo.tensor(0.), dfx.diff (fun _ -> combo.tensor(3.)) xs)
+            Assert.CheckEqual(combo.tensor(0.), dfx.diffn 2 (fun _ -> combo.tensor(3.)) xs)
+            Assert.CheckEqual(combo.zeros([2]), dfx.grad (fun _ -> combo.tensor(3.)) xv)
+            Assert.CheckEqual(combo.zeros([2]), dfx.jacobianv (fun _ -> combo.tensor([3.; 4.])) xv (combo.tensor([1.; 1.])))
+            Assert.CheckEqual(combo.zeros([2; 2]), dfx.jacobian (fun _ -> combo.tensor([3.; 4.])) xv)
+            Assert.CheckEqual(combo.zeros([2; 2]), dfx.hessian (fun _ -> combo.tensor(3.)) xv)
+
+    [<Test>]
+    member _.TestDerivativesNestedIndependentOfInnerVariable () =
+        // The inner derivative of a function that depends on the outer variable but not on the inner one is zero.
+        // It must not pick up the derivative at the outer nesting level, so d/dx (x + d/dy x^2) = 1.
+        for combo in Combos.FloatingPointExcept16s do
+            let x = combo.tensor(2.)
+            let y = combo.tensor(3.)
+            let xv = combo.tensor([2.])
+            let yv = combo.tensor([3.])
+            // fwd-on-fwd
+            Assert.CheckEqual(combo.tensor(1.), dfx.diff (fun x -> x + dfx.diff (fun _ -> x * x) y) x)
+            // rev-on-rev
+            Assert.CheckEqual(combo.tensor([1.]), dfx.grad (fun x -> (x + dfx.grad (fun _ -> (x * x).sum()) yv).sum()) xv)
+            // fwd-on-rev
+            Assert.CheckEqual(combo.tensor(1.), dfx.diff (fun x -> x + (dfx.grad (fun _ -> x * x) yv).sum()) x)
+            // rev-on-fwd
+            Assert.CheckEqual(combo.tensor([1.]), dfx.grad (fun x -> (x + dfx.diff (fun _ -> (x * x).sum()) y).sum()) xv)
+
+    [<Test>]
+    member _.TestDerivativesDiffnVanishing () =
+        // Higher derivatives that become zero before the requested order
+        for combo in Combos.FloatingPointExcept16s do
+            let x = combo.tensor(2.)
+            Assert.CheckEqual(combo.tensor(0.), dfx.diffn 2 (fun x -> x) x)
+            Assert.CheckEqual(combo.tensor(0.), dfx.diffn 3 (fun x -> x * x) x)
+            Assert.CheckEqual(combo.tensor(2.), dfx.diffn 2 (fun x -> x * x) x)
+            Assert.CheckEqual(combo.tensor(6.), dfx.diffn 3 (fun x -> x * x * x) x)
+
 
 // Random pipelines of fwd-fwd-rev-fwd, etc.

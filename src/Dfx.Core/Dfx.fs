@@ -1521,36 +1521,60 @@ type dfx with
     static member reverse (value:Tensor) (tensor:Tensor) = tensor.reverse(value)
 
     /// <summary>TBD</summary>
-    static member evalForwardDiff f x v =
-        x |> dfx.forwardDiff (GlobalNestingLevel.Next()) v |> f |> dfx.primalDerivative
+    static member evalForwardDiff (f:Tensor->Tensor) (x:Tensor) (v:Tensor) =
+        let tag = GlobalNestingLevel.Next()
+        let fx = x |> dfx.forwardDiff tag v |> f
+        // A result that carries no derivative at this nesting level does not depend on x, so its derivative is zero.
+        // It is returned unchanged, as it may still carry derivatives at outer nesting levels.
+        if fx.isForwardDiff && fx.nestingTag = tag then fx.primal, fx.derivative
+        else fx, fx.zerosLike()
 
     /// <summary>TBD</summary>
-    static member evalReverseDiff f x =
-        let x = x |> dfx.reverseDiff (GlobalNestingLevel.Next())
+    static member evalReverseDiff (f:Tensor->Tensor) (x:Tensor) =
+        let tag = GlobalNestingLevel.Next()
+        let x = x |> dfx.reverseDiff tag
         let fx = f x
-        let r = 
-            fun v -> 
-                fx |> dfx.reverse v
-                // We create the derivative as zero in cases where fx does not depend on x, as this is mathematically correct
-                // Alternatively, we can introduce a "strict" mode like PyTorch and raise an exception when this situation occurs
-                if x.derivative.shape = [|0|] then (x.zerosLike())
-                else x.derivative
-        fx.primal, r
+        // A result that is not reverse-differentiated at this nesting level does not depend on x, so its derivative is zero.
+        // It is returned unchanged, as it may still carry derivatives at outer nesting levels, and no reverse pass is run,
+        // as that would propagate into those outer levels.
+        if fx.isReverseDiff && fx.nestingTag = tag then
+            let r = 
+                fun v -> 
+                    fx |> dfx.reverse v
+                    // We create the derivative as zero in cases where fx does not depend on x, as this is mathematically correct
+                    // Alternatively, we can introduce a "strict" mode like PyTorch and raise an exception when this situation occurs
+                    if x.derivative.shape = [|0|] then (x.zerosLike())
+                    else x.derivative
+            fx.primal, r
+        else
+            fx, (fun _ -> x.zerosLike())
 
     /// <summary>TBD</summary>
     static member evalForwardDiffs (f:Tensor->Tensor) x (v:Tensor[]) =
         let n = v.Length
         if n = 0 then [|f x|]
         else
+            let tags = Array.zeroCreate n
             let mutable x = x
             for i in 0..n-1 do
-                x <- x |> dfx.forwardDiff (GlobalNestingLevel.Next()) v[i]
-            let mutable fx = f x
-            [|for _ in 0..n-1 do
-                let d = fx.derivativeDeep
-                fx <- fx.primal
-                d
-                |] |> Array.rev |> Array.append [|fx|]
+                tags[i] <- GlobalNestingLevel.Next()
+                x <- x |> dfx.forwardDiff tags[i] v[i]
+            let fx = f x
+            // Nesting levels, outermost first
+            let levels = [ for i in n-1 .. -1 .. 0 -> tags[i] ]
+            let primalAt tag (t:Tensor) = if t.isForwardDiff && t.nestingTag = tag then t.primal else t
+            // Differentiates t at each of the given levels in turn. A tensor that carries no derivative at a level
+            // does not depend on x there, so its derivative and all higher derivatives are zero.
+            let rec derivativeAt (t:Tensor) levels =
+                match levels with
+                | [] -> t
+                | tag :: rest ->
+                    if t.isForwardDiff && t.nestingTag = tag then derivativeAt t.derivative rest
+                    else t.zerosLike()
+            // The k-th derivative: take the primal at the outermost n-k levels, then differentiate at the remaining k
+            [|for k in 0..n do
+                let t = levels |> List.take (n - k) |> List.fold (fun t tag -> primalAt tag t) fx
+                derivativeAt t (levels |> List.skip (n - k))|]
 
     /// <summary>TBD</summary>
     /// <param name="f">TBD</param>
