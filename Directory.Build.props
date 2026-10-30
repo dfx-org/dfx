@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.0.10</Version>
+    <Version>1.0.11</Version>
     <Authors>Atılım Güneş Baydin, Don Syme, Barak A. Pearlmutter, Jeffrey Siskind, and DiffSharp and dfx contributors</Authors>
     <Owners>dfx maintainers</Owners>
     <PackageProjectUrl>https://docs.dfx.ac/</PackageProjectUrl>
