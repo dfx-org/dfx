@@ -41,6 +41,6 @@
     <Compile Include="Op.Outer.fs" />
     <Compile Include="Op.Solve.fs" />
 	  <PackageReference Update="FSharp.Core" Version="$(FSharpCoreVersion)" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.12" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.14" />
   </ItemGroup>
 </Project>
