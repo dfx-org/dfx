@@ -12,6 +12,9 @@ updates:
     ignore:
       # FSharp.Core sets the minimum FSharp.Core version for consumers of the packages, so it is updated deliberately
       - dependency-name: FSharp.Core
+      # System.* packages follow the .NET version of the target framework (net10.0), so their major version is updated with it
+      - dependency-name: System.*
+        update-types: ["version-update:semver-major"]
       # SkiaSharp is kept on the 2.x line referenced by TorchSharp
       - dependency-name: SkiaSharp*
         update-types: ["version-update:semver-major"]
