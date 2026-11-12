@@ -10,6 +10,8 @@
 #r "nuget: TorchSharp-cpu, 0.107.0"
 // #r "nuget: TorchSharp-cuda-linux, 0.107.0"
 // #r "nuget: TorchSharp-cuda-windows, 0.107.0"
+// The images are saved with SkiaSharp, whose Linux native library is a separate package
+#r "nuget: SkiaSharp.NativeAssets.Linux.NoDependencies, 2.88.9"
 // Option B: you can use a local libtorch installation
 // System.Runtime.InteropServices.NativeLibrary.Load("/home/gunes/anaconda3/lib/python3.8/site-packages/torch/lib/libtorch.so")
 
