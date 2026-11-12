@@ -4,7 +4,8 @@
 #r "Dfx.Data.dll"
 #r "Dfx.Backends.Reference.dll"
 #r "Dfx.Backends.Torch.dll"
-#r "nuget: SixLabors.ImageSharp,2.1.13"
+#r "nuget: SkiaSharp, 2.88.9"
+#r "nuget: SkiaSharp.NativeAssets.Linux.NoDependencies, 2.88.9"
 // These are needed to make fsdocs --eval work. If we don't select a backend like this in the beginning, we get erratic behavior.
 Dfx.dfx.config(backend=Dfx.Backend.Reference)
 Dfx.dfx.seed(123)
@@ -13,13 +14,11 @@ open Dfx.Util
 (*** condition: fsx ***)
 #if FSX
 #r "nuget: dfx-lite,{{fsdocs-package-version}}"
-#r "nuget: SixLabors.ImageSharp,2.1.13"
 #endif // FSX
 (*** condition: ipynb ***)
 #if IPYNB
 // Import dfx package
 #r "nuget: dfx-lite,{{fsdocs-package-version}}"
-#r "nuget: SixLabors.ImageSharp,2.1.13"
 
 // Set dotnet interactive formatter to plaintext
 Formatter.SetPreferredMimeTypesFor(typeof<obj>, "text/plain")
