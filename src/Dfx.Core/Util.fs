@@ -34,9 +34,14 @@ type GlobalNestingLevel() =
 /// Contains operations relating to pseudo-random number generation.
 type Random() =
     static let mutable rnd = System.Random()
+    // The Marsaglia polar method produces two independent normal samples at a time. The second one is kept here
+    // and returned by the next call.
+    static let mutable spareNormal : float voption = ValueNone
 
     /// Sets the random seed.
-    static member Seed(seed) = rnd <- System.Random(seed)
+    static member Seed(seed) =
+        rnd <- System.Random(seed)
+        spareNormal <- ValueNone
 
     /// Samples a random value from the standard uniform distribution over the interval [0,1).
     static member Uniform() = rnd.NextDouble()
@@ -46,13 +51,21 @@ type Random() =
 
     /// Samples a random value from the standard normal distribution with mean 0 and standard deviation 1.
     static member Normal() =
-        // Marsaglia polar method
-        // TODO: this is discarding one of the two samples that can be generated. For efficiency, we can keep the second sample around to return it in the next call.
-        let rec normal() = 
-            let x, y = (rnd.NextDouble()) * 2.0 - 1.0, (rnd.NextDouble()) * 2.0 - 1.0
-            let s = x * x + y * y
-            if s > 1.0 then normal() else x * sqrt (-2.0 * (log s) / s)
-        normal()
+        match spareNormal with
+        | ValueSome v ->
+            spareNormal <- ValueNone
+            v
+        | ValueNone ->
+            // Marsaglia polar method
+            let rec normal() = 
+                let x, y = (rnd.NextDouble()) * 2.0 - 1.0, (rnd.NextDouble()) * 2.0 - 1.0
+                let s = x * x + y * y
+                if s >= 1.0 || s = 0.0 then normal()
+                else
+                    let f = sqrt (-2.0 * (log s) / s)
+                    spareNormal <- ValueSome (y * f)
+                    x * f
+            normal()
 
     /// Samples a random value from the normal distribution with the given mean and standard deviation.
     static member Normal(mean, stddev) = mean + Random.Normal() * stddev
