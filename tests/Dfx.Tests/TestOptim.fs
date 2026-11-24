@@ -125,3 +125,16 @@ type TestOptim () =
         let xOpt = dfx.tensor([1., 1.])
         Assert.True(fxOpt.allclose(fx, 0.1, 0.1))
         Assert.True(xOpt.allclose(x, 0.1, 0.1))        
+
+    [<Test>]
+    member _.TestOptimModelStopsAfterEpochs () =
+        // The loss decreases at every step, so every step is a new minimum. Training must still stop after
+        // exactly the requested number of epochs.
+        for epochs in [0; 1; 3] do
+            let net = Linear(din, dout)
+            let mutable steps = 0
+            let loss (t:Tensor) (o:Tensor) =
+                steps <- steps + 1
+                dfx.mseLoss(o, t) * 0 + (1000. - float steps)
+            optim.sgd(net, dataloader, loss, epochs=epochs, print=false)
+            Assert.AreEqual(epochs * dataloader.length, steps)
