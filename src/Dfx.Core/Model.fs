@@ -477,13 +477,23 @@ type ModelBase() =
         dfx.save(m, fileName)
         dfx.load(fileName)
 
+    /// Describes a descendant of this model. The model is its own first descendant; it is described by its type name,
+    /// as describing it with ToString would recurse.
+    member private m.describe(mm:ModelBase) =
+        if obj.ReferenceEquals(mm, m) then
+            let name = m.GetType().Name
+            match name.IndexOf('`') with
+            | -1 -> name
+            | i -> name.Substring(0, i)
+        else mm.ToString()
+
     override m.ToString() = 
         let sb = System.Text.StringBuilder()
         sb.Append("Model(") |> ignore
         let mutable prefix = ""
         for mm in m.descendants do
             if mm.hasOwnParameters then
-                sb.Append(sprintf "%s%A" prefix mm) |> ignore
+                sb.Append(prefix + m.describe mm) |> ignore
                 prefix <- ", "
         sb.Append(")") |> ignore
         sb.ToString()
@@ -496,7 +506,7 @@ type ModelBase() =
         sb.AppendLine("---") |> ignore
         for mm in m.descendants do
             if mm.hasOwnParameters then
-                sb.AppendLine(sprintf "%-40s %16s" (mm.ToString()) (thousandsInt mm.nparameters)) |> ignore
+                sb.AppendLine(sprintf "%-40s %16s" (m.describe mm) (thousandsInt mm.nparameters)) |> ignore
         sb.AppendLine("---") |> ignore
         sb.AppendLine(sprintf "Trainable params              : %s" (thousandsInt m.nparameters)) |> ignore
         sb.AppendLine(sprintf "Non-trainable params (buffers): %s" (thousandsInt m.nbuffers)) |> ignore
