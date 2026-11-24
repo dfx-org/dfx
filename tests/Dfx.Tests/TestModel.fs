@@ -72,6 +72,17 @@ type GenericModelIntString() =
 type TestModel () =
 
     [<Test>]
+    member _.TestModelToStringWithOwnParameters () =
+        // A model with parameters of its own is among its descendants; printing it must not recurse
+        let net = ModelStyle1WithParamBuffer()
+        Assert.AreEqual("Model(ModelStyle1WithParamBuffer, Linear(20, 32), Linear(32, 30))", net.ToString())
+        Assert.AreEqual(net.ToString(), sprintf "%A" net)
+        Assert.True(net.summary().Contains("ModelStyle1WithParamBuffer"))
+        let p = Parameter(dfx.randn([2; 2]))
+        let m = Model<Tensor, Tensor>((fun x -> x.matmul(p.value)), parameters=[p])
+        Assert.AreEqual("Model(Model)", m.ToString())
+
+    [<Test>]
     member _.TestParameterDictFlattenUnflatten () =
         let d1t1 = Parameter <| dfx.randn([15;5])
         let d1t2 = Parameter <| dfx.randn(4)
