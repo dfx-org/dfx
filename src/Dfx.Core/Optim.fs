@@ -177,7 +177,8 @@ type optim =
         let mutable lPrev = System.Double.MinValue
         let mutable stop = false
         let start = System.DateTime.Now
-        if print then printfn "Duration   |Iters| Ep|%s| Loss" (stringPadAs "Minib" (sprintf " 1/%d " dataloader.length))
+        if epochs = 0 || iters = 0 then stop <- true
+        if print && not stop then printfn "Duration   |Iters| Ep|%s| Loss" (stringPadAs "Minib" (sprintf " 1/%d " dataloader.length))
         while not stop do
             epoch <- epoch + 1
             dataloader.epoch() 
@@ -200,15 +201,15 @@ type optim =
                 elif (iters <> -1) && (i=iters-1) then
                     status <- sprintf "Iters=%d reached" iters
                     stop <- true
+                elif (epochs <> -1) && (epoch=epochs-1) && (bi=dataloader.length-1) then
+                    status <- sprintf "Epochs=%d reached" epochs
+                    stop <- true
                 elif lScalar < lMin then
                     lMin <- lScalar
                     status <- "- New min"
                 elif lScalar > lMax then
                     lMax <- lScalar
                     status <- "+ New max"
-                elif (epochs <> -1) && (epoch=epochs) then
-                    status <- sprintf "Epochs=%d reached" epochs
-                    stop <- true
                 elif lScalar < lPrev then
                     status <- "-"
                 elif lScalar > lPrev then
